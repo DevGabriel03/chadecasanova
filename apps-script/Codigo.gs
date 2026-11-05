@@ -1,7 +1,8 @@
 /**
  * Backend do Chá de Casa Nova (Google Apps Script ligado a uma Planilha Google).
  * Cria sozinho as abas "Reservas", "Presenças" e "Contribuições".
- * O CPF fica só na planilha: o site recebe apenas o nome de quem reservou.
+ * Quem reservou, CPF e valores ficam só na planilha (privada do dono): o site
+ * recebe apenas quantas unidades de cada item já foram reservadas.
  * Para liberar um item de novo, apague a linha da reserva na aba "Reservas".
  */
 
@@ -37,8 +38,8 @@ function lerReservas() {
   linhas.forEach((l) => {
     const id = l[1];
     if (!id) return;
-    // nome completo para a aba "Já escolhidos"; o CPF nunca sai da planilha
-    (mapa[id] = mapa[id] || []).push({ nome: String(l[4]).trim(), forma: l[6] === "PIX" ? "pix" : "levar" });
+    // só a quantidade sai da planilha: nomes, CPFs e valores ficam com o dono
+    mapa[id] = (mapa[id] || 0) + 1;
   });
   return mapa;
 }
@@ -58,8 +59,8 @@ function doPost(e) {
     if (d.acao === "reservar") {
       const cpf = texto(d.cpf, 11).replace(/\D/g, "");
       if (!d.itemId || !d.nome || cpf.length !== 11) return resposta({ ok: false, erro: "dados" });
-      const atuais = lerReservas()[d.itemId] || [];
-      if (atuais.length >= Number(d.limite || 1)) return resposta({ ok: false, erro: "esgotado" });
+      const atuais = lerReservas()[d.itemId] || 0;
+      if (atuais >= Number(d.limite || 1)) return resposta({ ok: false, erro: "esgotado" });
       // "'" na frente mantém os zeros à esquerda do CPF
       aba("Reservas").appendRow([agora, texto(d.itemId, 60), texto(d.item), Number(d.valor) || 0,
         texto(d.nome), "'" + cpf, d.forma === "pix" ? "PIX" : "Leva no dia"]);

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <div id="aviso-demo" class="aviso-demo" hidden>
@@ -25,7 +25,6 @@
         <button type="button" data-ir="evento">O evento</button>
         <button type="button" data-ir="presenca">Confirmar presença</button>
         <button type="button" data-ir="presentes">Presentes</button>
-        <button type="button" data-ir="escolhidos">Já escolhidos</button>
         <button type="button" data-ir="contribuir">Ajudar com um valor</button>
       </nav>
     </div>
@@ -123,21 +122,6 @@
       </div>
     </section>
 
-    <!-- JÁ ESCOLHIDOS -->
-    <section id="escolhidos" class="aba">
-      <div class="wrap">
-        <h1 class="titulo-aba">Presentes já escolhidos</h1>
-        <p class="lead">Veja quem já escolheu cada presente e como vai presentear.</p>
-        <div class="tabela-caixa">
-          <table class="tabela" id="tabela-escolhidos">
-            <thead><tr><th scope="col">Presente</th><th scope="col">Quem escolheu</th><th scope="col">Como</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <p class="vazio" id="escolhidos-vazio">Ninguém escolheu um presente ainda. Seja o primeiro na lista acima.</p>
-      </div>
-    </section>
-
     <!-- CONTRIBUIR -->
     <section id="contribuir" class="aba">
       <div class="wrap estreito">
@@ -187,7 +171,7 @@
         <input id="r-nome" name="nome" autocomplete="name" required>
         <label for="r-cpf">CPF</label>
         <input id="r-cpf" name="cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" required>
-        <p class="miudo">O CPF serve só para identificar quem reservou. Ele não aparece no site.</p>
+        <p class="miudo">Seu nome e CPF ficam só com os anfitriões. Eles não aparecem no site.</p>
         <fieldset>
           <legend>Como você vai presentear?</legend>
           <label class="opcao"><input type="radio" name="forma" value="levar" checked> Vou levar o presente no dia do evento</label>
@@ -203,7 +187,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="config.js?v=7"></script>
-  <script src="app.js?v=7"></script>
+  <script src="config.js?v=8"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

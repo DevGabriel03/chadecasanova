@@ -3,7 +3,7 @@
   const $ = (s) => document.querySelector(s);
   const brl = (v) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const DEMO = !C.API_URL;
-  const ABAS = ["evento", "presenca", "presentes", "escolhidos", "contribuir"];
+  const ABAS = ["evento", "presenca", "presentes", "contribuir"];
 
   let reservas = {};          // itemId -> [{ nome, forma }]
   let categoria = "Todos";
@@ -28,10 +28,9 @@
     if (DEMO) {
       const d = lerDemo();
       if (dados.acao === "reservar") {
-        const lista = d.reservas[dados.itemId] || [];
-        if (lista.length >= dados.limite) return { ok: false, erro: "esgotado" };
-        lista.push({ nome: dados.nome.trim(), forma: dados.forma });
-        d.reservas[dados.itemId] = lista;
+        const feitos = contagem(d.reservas[dados.itemId]);
+        if (feitos >= dados.limite) return { ok: false, erro: "esgotado" };
+        d.reservas[dados.itemId] = feitos + 1;
         gravarDemo(d);
         return { ok: true, reservas: d.reservas };
       }
@@ -47,6 +46,9 @@
 
   // ---------------------------------------------------------------- utilidades
   const primeiroNome = (n) => n.trim().split(/\s+/)[0];
+  // O site só recebe quantas unidades de cada item já foram reservadas; quem
+  // reservou fica só na planilha. (Aceita a lista antiga por compatibilidade.)
+  const contagem = (v) => (typeof v === "number" ? v : Array.isArray(v) ? v.length : 0);
 
   function cpfValido(cpf) {
     const c = cpf.replace(/\D/g, "");
@@ -224,8 +226,7 @@
     const ul = $("#lista"); ul.innerHTML = "";
     C.itens.forEach((item) => {
       const qtd = item.quantidade || 1;
-      const lista = reservas[item.id] || [];
-      const feitos = Math.min(lista.length, qtd);
+      const feitos = Math.min(contagem(reservas[item.id]), qtd);
       const esgotado = feitos >= qtd;
       if (categoria !== "Todos" && item.categoria !== categoria) return;
       if (soDisp && esgotado) return;
@@ -240,38 +241,15 @@
         <span class="cat"></span>
         <span class="nome"></span>
         <span class="estado ${estado[0]}">${estado[1]}</span>
-        <span class="valor">${brl(item.valor)}</span>
-        ${lista.length ? '<span class="quem"></span>' : ""}`;
+        <span class="valor">${brl(item.valor)}</span>`;
       b.querySelector(".cat").textContent = item.categoria || "";
       b.querySelector(".nome").textContent = item.nome;
-      if (lista.length) b.querySelector(".quem").textContent = "Reservado por " + lista.map((r) => primeiroNome(r.nome)).join(", ");
       b.setAttribute("aria-label", `${item.nome}, ${brl(item.valor)}, ${estado[1]}`);
       b.onclick = () => abrirItem(item);
       li.appendChild(b); ul.appendChild(li);
     });
 
     if (!ul.children.length) ul.innerHTML = '<li class="vazio">Nenhum item disponível neste filtro.</li>';
-    montarEscolhidos();
-  }
-
-  // Tabela "Já escolhidos": uma linha por pessoa que escolheu, na ordem da lista
-  function montarEscolhidos() {
-    const corpo = $("#tabela-escolhidos tbody");
-    corpo.innerHTML = "";
-    C.itens.forEach((item) => {
-      (reservas[item.id] || []).forEach((r) => {
-        const tr = document.createElement("tr");
-        [item.nome, r.nome, r.forma === "pix" || r.forma === "PIX" ? "Mandou PIX" : "Leva no dia"].forEach((t, i) => {
-          const td = document.createElement("td"); td.textContent = t;
-          if (i === 2) td.className = "como";
-          tr.appendChild(td);
-        });
-        corpo.appendChild(tr);
-      });
-    });
-    const vazio = !corpo.children.length;
-    $("#tabela-escolhidos").hidden = vazio;
-    $("#escolhidos-vazio").hidden = !vazio;
   }
 
   async function atualizarReservas() {
