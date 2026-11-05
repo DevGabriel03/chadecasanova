@@ -4,13 +4,50 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Chá de Casa Nova</title>
-  <meta name="description" content="Confirme presença, veja o local e escolha um presente.">
+  <meta name="description" content="Gabriel & Cecília · Confirme presença, veja a lista de presentes e a localização.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
+  <!-- Ilustrações florais em traço fino (azul serenity), reaproveitadas na página -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="flor" viewBox="-14 -14 28 28">
+        <g fill="none" stroke="currentColor" stroke-width="1">
+          <ellipse cx="0" cy="-6.5" rx="3.6" ry="6.5"/>
+          <ellipse cx="0" cy="-6.5" rx="3.6" ry="6.5" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-6.5" rx="3.6" ry="6.5" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-6.5" rx="3.6" ry="6.5" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-6.5" rx="3.6" ry="6.5" transform="rotate(288)"/>
+        </g>
+        <circle r="2" fill="currentColor"/>
+      </symbol>
+      <symbol id="ramo" viewBox="0 0 160 60">
+        <g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+          <path d="M4 56C40 52 92 36 150 10"/>
+          <path d="M0 0c5-6 15-7 22-2c-6 6-16 7-22 2z" transform="translate(24 53) rotate(-38)"/>
+          <path d="M0 0c5-6 15-7 22-2c-6 6-16 7-22 2z" transform="translate(36 51) rotate(18)"/>
+          <path d="M0 0c5-6 15-7 22-2c-6 6-16 7-22 2z" transform="translate(56 46) rotate(-48)"/>
+          <path d="M0 0c5-6 15-7 22-2c-6 6-16 7-22 2z" transform="translate(70 42) rotate(8)"/>
+          <path d="M0 0c5-6 15-7 22-2c-6 6-16 7-22 2z" transform="translate(90 34) rotate(-55)"/>
+          <path d="M0 0c4-5 12-6 18-2c-5 5-13 6-18 2z" transform="translate(104 28) rotate(-4)"/>
+          <path d="M0 0c4-5 12-6 18-2c-5 5-13 6-18 2z" transform="translate(122 20) rotate(-60)"/>
+          <path d="M112 30c3-8 9-12 15-13"/>
+        </g>
+        <circle cx="128" cy="17" r="2.2" fill="currentColor"/>
+        <circle cx="76" cy="49" r="1.6" fill="currentColor"/>
+        <circle cx="82" cy="52" r="1.2" fill="currentColor"/>
+      </symbol>
+      <symbol id="arranjo" viewBox="0 0 340 64">
+        <use href="#ramo" x="6" y="4" width="160" height="60"/>
+        <g transform="translate(340 0) scale(-1 1)"><use href="#ramo" x="6" y="4" width="160" height="60"/></g>
+        <use href="#flor" x="152" y="0" width="36" height="36"/>
+      </symbol>
+    </defs>
+  </svg>
+
   <div id="aviso-demo" class="aviso-demo" hidden>
     Modo de teste: as reservas ficam só neste navegador. Configure o <code>API_URL</code> para valer de verdade.
   </div>
@@ -18,58 +55,49 @@
   <header class="topo">
     <div class="wrap topo-in">
       <a class="marca" href="#evento" data-ir="evento">
-        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 15 16 5l12 10v12a1 1 0 0 1-1 1h-7v-8h-8v8H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 28 28" aria-hidden="true"><use href="#flor" width="28" height="28"/></svg>
         <span id="marca-texto">Chá de Casa Nova</span>
       </a>
       <nav class="abas" aria-label="Seções">
-        <button type="button" data-ir="evento">O evento</button>
+        <button type="button" data-ir="evento">O convite</button>
         <button type="button" data-ir="presenca">Confirmar presença</button>
-        <button type="button" data-ir="presentes">Presentes</button>
+        <button type="button" data-ir="presentes" class="destaque">Lista de presentes</button>
         <button type="button" data-ir="contribuir">Ajudar com um valor</button>
+        <button type="button" data-ir="local">Localização</button>
       </nav>
     </div>
   </header>
 
   <main>
-    <!-- O EVENTO -->
-    <section id="evento" class="aba">
+    <!-- O CONVITE -->
+    <section id="evento" class="aba convite">
       <div class="wrap">
         <div class="hero">
-          <div class="hero-texto">
-            <p class="sobre">Você está convidado para o</p>
-            <h1 id="titulo">Chá de Casa Nova</h1>
-            <p class="anfitrioes" id="anfitrioes"></p>
-            <p class="recado" id="recado"></p>
-            <div class="acoes">
-              <button type="button" class="btn btn-pri" data-ir="presenca">Confirmar presença</button>
-              <button type="button" class="btn btn-sec" data-ir="presentes">Ver lista de presentes</button>
-            </div>
-          </div>
+          <svg class="arranjo arranjo-topo" aria-hidden="true"><use href="#arranjo"/></svg>
+          <p class="sobre">Você está convidado para o nosso</p>
+          <h1 id="titulo">Chá de Casa Nova</h1>
+          <p class="anfitrioes" id="anfitrioes"></p>
+          <p class="recado" id="recado"></p>
+
           <figure class="foto">
+            <svg class="canto canto-a" aria-hidden="true"><use href="#ramo"/></svg>
+            <svg class="canto canto-b" aria-hidden="true"><use href="#ramo"/></svg>
             <img id="foto" src="fotos/casal.jpg" width="739" height="422" alt="Gabriel e Cecília na casa nova">
           </figure>
-        </div>
 
-        <div class="info-grid">
-          <div class="cartao quando">
-            <h2>Quando</h2>
-            <p class="grande" id="data-texto"></p>
-            <p id="hora-texto"></p>
-            <p class="contagem" id="contagem"></p>
-            <p class="miudo">Confirme sua presença até <strong id="confirmar-ate"></strong>.</p>
+          <div class="data-convite" aria-describedby="data-texto">
+            <span class="inv-lado" id="inv-semana"></span>
+            <span class="inv-centro"><b id="inv-dia"></b><span id="inv-mes"></span><span id="inv-ano"></span></span>
+            <span class="inv-lado" id="hora-texto"></span>
           </div>
-          <div class="cartao onde">
-            <h2>Onde</h2>
-            <address id="endereco"></address>
-            <div class="links-mapa">
-              <a class="btn btn-sec btn-p" id="link-maps" target="_blank" rel="noopener">Abrir no Google Maps</a>
-              <a class="btn btn-sec btn-p" id="link-waze" target="_blank" rel="noopener">Abrir no Waze</a>
-              <button type="button" class="btn btn-sec btn-p" id="copiar-endereco">Copiar endereço</button>
-            </div>
+          <p class="sr-only" id="data-texto"></p>
+          <p class="contagem" id="contagem"></p>
+          <p class="miudo">Confirme sua presença até <strong id="confirmar-ate"></strong>.</p>
+
+          <div class="acoes">
+            <button type="button" class="btn btn-pri" data-ir="presenca">Confirmar presença</button>
+            <button type="button" class="btn btn-sec" data-ir="presentes">Ver lista de presentes</button>
           </div>
-        </div>
-        <div class="mapa">
-          <iframe id="mapa" title="Mapa do local do evento" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
     </section>
@@ -77,8 +105,12 @@
     <!-- CONFIRMAR PRESENÇA -->
     <section id="presenca" class="aba">
       <div class="wrap estreito">
-        <h1 class="titulo-aba">Confirmar presença</h1>
-        <p class="lead">Avise se você vem, para a gente se organizar com comida e bebida.</p>
+        <div class="cabeca">
+          <p class="sobre">Com amor, esperamos você</p>
+          <h2 class="titulo-aba">Confirmar presença</h2>
+          <svg class="arranjo divisor" aria-hidden="true"><use href="#arranjo"/></svg>
+          <p class="lead">Para nos organizarmos para esse momento tão especial, confirme a sua presença, estaremos te esperando! 🩵</p>
+        </div>
         <form id="form-presenca" class="form" novalidate>
           <label for="p-nome">Seu nome completo</label>
           <input id="p-nome" name="nome" autocomplete="name" required>
@@ -96,9 +128,9 @@
           </div>
 
           <label for="p-tel">WhatsApp (opcional)</label>
-          <input id="p-tel" name="telefone" type="tel" autocomplete="tel" placeholder="(11) 99999-9999">
+          <input id="p-tel" name="telefone" type="tel" autocomplete="tel" placeholder="(61) 99999-9999">
 
-          <label for="p-recado">Recado para os anfitriões (opcional)</label>
+          <label for="p-recado">Recado para o casal (opcional)</label>
           <textarea id="p-recado" name="recado" rows="3"></textarea>
 
           <p class="erro" id="p-erro" hidden></p>
@@ -108,11 +140,17 @@
       </div>
     </section>
 
-    <!-- PRESENTES -->
-    <section id="presentes" class="aba">
+    <!-- LISTA DE PRESENTES (destaque) -->
+    <section id="presentes" class="aba presentes">
+      <svg class="canto-secao canto-secao-a" aria-hidden="true"><use href="#ramo"/></svg>
+      <svg class="canto-secao canto-secao-b" aria-hidden="true"><use href="#ramo"/></svg>
       <div class="wrap">
-        <h1 class="titulo-aba">Lista de presentes</h1>
-        <p class="lead">Toque em um item disponível para reservar. Você pode levar o presente no dia ou mandar o valor por PIX.</p>
+        <div class="cabeca">
+          <p class="sobre">Feita com carinho</p>
+          <h2 class="titulo-aba titulo-maior">Lista de presentes</h2>
+          <svg class="arranjo divisor" aria-hidden="true"><use href="#arranjo"/></svg>
+          <p class="lead">Escolha um presente para deixar o nosso lar com a nossa cara. Você pode levar no dia ou enviar o valor por PIX.</p>
+        </div>
         <div class="filtros">
           <div class="chips" id="categorias" role="group" aria-label="Filtrar por cômodo"></div>
           <label class="so-disp"><input type="checkbox" id="so-disponiveis"> Mostrar só disponíveis</label>
@@ -122,21 +160,25 @@
       </div>
     </section>
 
-    <!-- CONTRIBUIR -->
+    <!-- AJUDAR COM UM VALOR -->
     <section id="contribuir" class="aba">
       <div class="wrap estreito">
-        <h1 class="titulo-aba">Ajudar com um valor</h1>
-        <p class="lead">Prefere não escolher um item? Mande um valor por PIX, a partir de R$ 100. Toda ajuda vai para montar a casa.</p>
+        <div class="cabeca">
+          <p class="sobre">Contribuição</p>
+          <h2 class="titulo-aba">Ajudar com um valor</h2>
+          <svg class="arranjo divisor" aria-hidden="true"><use href="#arranjo"/></svg>
+          <p class="lead">Prefere optar por uma contribuição em dinheiro? Fique à vontade para nos enviar um PIX. Cada detalhe construído tem um pouquinho de vocês!</p>
+        </div>
         <div class="chips valores" id="valores" role="group" aria-label="Escolha um valor"></div>
         <div class="outro-valor">
           <label for="valor-livre">Outro valor (R$)</label>
-          <input id="valor-livre" type="number" min="100" step="1" inputmode="decimal" placeholder="Ex.: 120">
+          <input id="valor-livre" type="number" min="100" step="1" inputmode="decimal" placeholder="Ex.: 250">
           <p class="miudo" id="valor-minimo"></p>
         </div>
         <div id="pix-contribuir"></div>
 
         <form id="form-contribuir" class="form" novalidate>
-          <h2>Já mandou? Avise a gente</h2>
+          <h3>Já enviou? Avise a gente</h3>
           <label for="c-nome">Seu nome</label>
           <input id="c-nome" name="nome" autocomplete="name" required>
           <label for="c-recado">Recado (opcional)</label>
@@ -147,10 +189,32 @@
         <div id="contribuir-ok" class="sucesso" hidden></div>
       </div>
     </section>
+
+    <!-- LOCALIZAÇÃO -->
+    <section id="local" class="aba">
+      <div class="wrap estreito">
+        <div class="cabeca">
+          <p class="sobre">Onde vai ser</p>
+          <h2 class="titulo-aba">Localização</h2>
+          <svg class="arranjo divisor" aria-hidden="true"><use href="#arranjo"/></svg>
+        </div>
+        <div class="cartao onde">
+          <address id="endereco"></address>
+          <div class="links-mapa">
+            <a class="btn btn-sec btn-p" id="link-maps" target="_blank" rel="noopener">Abrir no Google Maps</a>
+            <a class="btn btn-sec btn-p" id="link-waze" target="_blank" rel="noopener">Abrir no Waze</a>
+            <button type="button" class="btn btn-sec btn-p" id="copiar-endereco">Copiar endereço</button>
+          </div>
+        </div>
+        <div class="mapa">
+          <iframe id="mapa" title="Mapa do local do evento" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="rodape"><div class="wrap rodape-in">
-    <span>Feito com carinho para a nossa casa nova.</span>
+    <span><svg class="flor-mini" aria-hidden="true"><use href="#flor"/></svg> Com carinho, Gabriel &amp; Cecília</span>
     <a id="link-admin" href="#" target="_blank" rel="noopener" hidden>Área dos anfitriões</a>
   </div></footer>
 
@@ -174,7 +238,7 @@
         <input id="r-nome" name="nome" autocomplete="name" required>
         <label for="r-cpf">CPF</label>
         <input id="r-cpf" name="cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" required>
-        <p class="miudo">Seu nome e CPF ficam só com os anfitriões. Eles não aparecem no site.</p>
+        <p class="miudo">Seu nome e CPF ficam só com o casal. Eles não aparecem no site.</p>
         <fieldset>
           <legend>Como você vai presentear?</legend>
           <label class="opcao"><input type="radio" name="forma" value="levar" checked> Vou levar o presente no dia do evento</label>
@@ -190,7 +254,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="config.js?v=10"></script>
-  <script src="app.js?v=10"></script>
+  <script src="config.js?v=11"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>

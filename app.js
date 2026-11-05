@@ -3,7 +3,7 @@
   const $ = (s) => document.querySelector(s);
   const brl = (v) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const DEMO = !C.API_URL;
-  const ABAS = ["evento", "presenca", "presentes", "contribuir"];
+  const ABAS = ["evento", "presenca", "presentes", "contribuir", "local"];
 
   let reservas = {};          // itemId -> [{ nome, forma }]
   let categoria = "Todos";
@@ -186,6 +186,12 @@
     $("#data-texto").textContent = C.dataTexto;
     $("#hora-texto").textContent = C.horaTexto;
     $("#confirmar-ate").textContent = C.confirmarAte;
+    // data no formato de convite: DOMINGO | 13 dezembro 2026 | A PARTIR DAS 12H
+    const quando = new Date(C.data + "T" + C.hora);
+    $("#inv-semana").textContent = quando.toLocaleDateString("pt-BR", { weekday: "long" });
+    $("#inv-dia").textContent = quando.getDate();
+    $("#inv-mes").textContent = quando.toLocaleDateString("pt-BR", { month: "long" });
+    $("#inv-ano").textContent = quando.getFullYear();
 
     const dias = Math.ceil((new Date(C.data + "T" + C.hora) - new Date()) / 86400000);
     $("#contagem").textContent = dias > 1 ? `Faltam ${dias} dias` : dias === 1 ? "É amanhã!" : dias === 0 ? "É hoje!" : "Já aconteceu, obrigado!";
@@ -236,7 +242,7 @@
       b.type = "button"; b.className = "etiqueta"; b.disabled = esgotado;
       const estado = esgotado ? ["fechado", "Já garantido"]
         : feitos ? ["parcial", `Faltam ${qtd - feitos} de ${qtd}`]
-        : ["livre", qtd > 1 ? `Disponível · precisamos de ${qtd}` : "Disponível"];
+        : ["livre", qtd > 1 ? `Disponível · ${qtd} unid.` : "Disponível"];
       b.innerHTML = `
         <span class="cat"></span>
         <span class="nome"></span>
@@ -395,7 +401,7 @@
       ok.innerHTML = vai === "sim"
         ? `<h2>Presença confirmada!</h2><p>Te esperamos ${esc(C.dataTexto.toLowerCase())}, ${esc(C.horaTexto)}.</p>
            <div class="acoes"><button type="button" class="btn btn-pri" data-ir="presentes">Escolher um presente</button>
-           <button type="button" class="btn btn-sec" data-ir="evento">Ver o endereço</button></div>`
+           <button type="button" class="btn btn-sec" data-ir="local">Ver a localização</button></div>`
         : `<h2>Obrigado por avisar!</h2><p>Vamos sentir sua falta. Se quiser, você ainda pode ajudar com um presente ou um valor.</p>
            <div class="acoes"><button type="button" class="btn btn-sec" data-ir="contribuir">Ajudar com um valor</button></div>`;
       ok.hidden = false;

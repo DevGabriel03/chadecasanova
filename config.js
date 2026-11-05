@@ -17,7 +17,7 @@ window.CONFIG = {
   hora: "12:00",
   dataTexto: "Domingo, 13 de dezembro de 2026",
   horaTexto: "a partir das 12h",
-  confirmarAte: "10 de dezembro",
+  confirmarAte: "1º de dezembro",
 
   // Campos vazios não aparecem no site.
   endereco: {
@@ -47,7 +47,7 @@ window.CONFIG = {
 
   // Aba "Ajudar com um valor": valor mínimo aceito e valores sugeridos
   valorMinimo: 100,
-  valoresSimbolicos: [100, 150, 200, 300],
+  valoresSimbolicos: [100, 200, 300, 500],
 
   // Endereço do Google Apps Script (veja LEIA-ME.md). Enquanto estiver
   // vazio, o site roda em MODO DE TESTE e guarda tudo só no seu navegador.
