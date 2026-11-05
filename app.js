@@ -456,6 +456,7 @@
 
   // ---------------------------------------------------------------- início
   $("#aviso-demo").hidden = !DEMO;
+  if (C.PAINEL_URL) { $("#link-admin").href = C.PAINEL_URL; $("#link-admin").hidden = false; }
   if (DEMO && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname))
     $("#aviso-demo").textContent = "Site em preparação: as confirmações e reservas ainda não estão sendo salvas. Volte em breve!";
   $("#so-disponiveis").addEventListener("change", montarLista);

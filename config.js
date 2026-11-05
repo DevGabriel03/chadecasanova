@@ -50,6 +50,8 @@ window.CONFIG = {
   // Endereço do Google Apps Script (veja LEIA-ME.md). Enquanto estiver
   // vazio, o site roda em MODO DE TESTE e guarda tudo só no seu navegador.
   API_URL: "https://script.google.com/macros/s/AKfycbw9itglRRmKhVtwI0jWliLQulBS47tXRQ6Kq4n6osaMdBKR7rfyw7ykvhQg_yDao83Xkw/exec",
+  // Painel do anfitrião: só abre para a conta Google dos anfitriões.
+  PAINEL_URL: "https://script.google.com/macros/s/AKfycbxMckoZeiGvltZEJPNuSjAxQFkp73QAGKXYuNk1k4__SeqdRljJOeaZEeCMr0JyA0fhnA/exec",
 
   // Lista de presentes. "id" precisa ser único e não deve mudar depois que
   // alguém reservar. "quantidade" é quantas unidades você precisa.
