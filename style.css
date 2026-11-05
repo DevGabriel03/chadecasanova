@@ -27,6 +27,8 @@ body {
 }
 h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 300; text-wrap: balance; line-height: 1.1; margin: 0; color: var(--serenity-escuro); }
 strong, b { font-weight: 500; }
+/* a Cormorant usa números "antigos" (o 1 parece um I); nos valores e datas, números retos */
+.inv-centro b, .valores .chip, .pix-valor, .etiqueta .valor, .preco { font-variant-numeric: lining-nums tabular-nums; }
 .wrap {
   max-width: 1060px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
