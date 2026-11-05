@@ -474,8 +474,10 @@
   setInterval(() => { if (!modal.open) atualizarReservas(); }, 30000);
   const abaInicial = location.hash.slice(1);
   if (ABAS.includes(abaInicial)) {
+    // o navegador tenta restaurar a rolagem antiga; e fontes e imagens mudam a altura
+    // da página ao carregar: por isso rola de novo para a seção pedida depois do load
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     irPara(abaInicial, false);
-    // fontes e imagens mudam a altura da página ao carregar: rola de novo para a seção pedida
-    window.addEventListener("load", () => irPara(abaInicial, false), { once: true });
+    window.addEventListener("load", () => setTimeout(() => irPara(abaInicial, false), 50), { once: true });
   } else marcarAba(abaVisivel());
 })();
