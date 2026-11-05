@@ -472,6 +472,10 @@
   montarLista();
   atualizarReservas();
   setInterval(() => { if (!modal.open) atualizarReservas(); }, 30000);
-  if (ABAS.includes(location.hash.slice(1))) irPara(location.hash.slice(1), false);
-  else marcarAba(abaVisivel());
+  const abaInicial = location.hash.slice(1);
+  if (ABAS.includes(abaInicial)) {
+    irPara(abaInicial, false);
+    // fontes e imagens mudam a altura da página ao carregar: rola de novo para a seção pedida
+    window.addEventListener("load", () => irPara(abaInicial, false), { once: true });
+  } else marcarAba(abaVisivel());
 })();
