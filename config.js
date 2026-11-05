@@ -7,8 +7,10 @@ window.CONFIG = {
   titulo: "Chá de Casa Nova",
   anfitrioes: "Gabriel & Cecília",                // aparece embaixo do título
   recado:
-    "Mudamos! Queremos comemorar o nosso novo cantinho com quem a gente ama. " +
-    "Confirme sua presença e, se quiser, escolha um presente da lista.",
+    "Iniciamos o capítulo mais bonito da nossa história e, para celebrar essa nova fase " +
+    "do nosso casamento, queremos reunir quem mais amamos.\n" +
+    "Sua presença é essencial para abençoar o nosso lar. E, para nos ajudar a deixar cada " +
+    "cantinho com a nossa cara, preparamos uma lista de presentes cheia de carinho!",
 
   // Data no formato AAAA-MM-DD e hora HH:MM (usados na contagem regressiva)
   data: "2026-12-13",
