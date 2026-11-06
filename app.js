@@ -3,7 +3,7 @@
   const $ = (s) => document.querySelector(s);
   const brl = (v) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const DEMO = !C.API_URL;
-  const ABAS = ["evento", "presenca", "presentes", "contribuir", "local", "agradecimento"];
+  const ABAS = ["evento", "presenca", "presentes", "contribuir", "local"];
 
   let reservas = {};          // itemId -> [{ nome, forma }]
   let categoria = "Todos";
@@ -163,7 +163,7 @@
     if (location.hash !== "#" + aba) history.replaceState(null, "", "#" + aba);
   }
   function irPara(aba, suave = true) {
-    if (!ABAS.includes(aba) || $("#" + aba).hidden) aba = "evento"; // "agradecimento" só existe depois de concluir algo
+    if (!ABAS.includes(aba) || $("#" + aba).hidden) aba = "evento";
     $("#" + aba).scrollIntoView({ behavior: suave ? "smooth" : "auto", block: "start" });
     marcarAba(aba);
   }
@@ -386,23 +386,17 @@
     }
   });
 
-  // ---------------------------------------------------------------- aba "Agradecimento"
-  // Só aparece no menu depois que a pessoa conclui algo (reservar um presente ou avisar um PIX).
-  // Mostra o vídeo do casal, a mensagem certa para cada caso e, se for o caso, os dados do PIX.
-  function mostrarAgradecimento({ sobre, mensagem, instrucao, pix }) {
-    $("#ag-sobre").textContent = sobre;
-    $("#ag-msg").textContent = mensagem || "";
-    $("#ag-instrucao").textContent = instrucao;
-    const extra = $("#ag-extra"); extra.innerHTML = "";
-    if (pix) caixaPix(extra, pix);
-
-    $("#agradecimento").hidden = false;
-    $("#aba-agradecimento").hidden = false;
+  // ---------------------------------------------------------------- agradecimento
+  // Depois de reservar um presente ou avisar um PIX, aparece SÓ o vídeo do casal e a mensagem,
+  // numa janela que ocupa 80% da tela. A mensagem muda conforme o caso.
+  const modalObrigado = $("#modal-obrigado");
+  function mostrarAgradecimento(mensagem) {
     if (modal.open) modal.close();
-    irPara("agradecimento");
-
-    const video = $("#ag-video");
+    $("#mo-msg").textContent = mensagem || "";
+    const video = $("#mo-video");
     video.hidden = !C.videoObrigado;
+    modalObrigado.showModal();
+    $("#mo-corpo").scrollTop = 0;
     if (C.videoObrigado) {
       if (!video.getAttribute("src")) video.src = C.videoObrigado;
       video.currentTime = 0;
@@ -410,27 +404,11 @@
       video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
     }
   }
-
-  function mostrarConfirmacao(nome, forma) {
-    const dia = C.dataTexto.toLowerCase();
-    mostrarAgradecimento({
-      sobre: `Reserva feita, ${primeiroNome(nome)}`,
-      mensagem: C.mensagemObrigado,
-      instrucao: forma === "pix"
-        ? `“${itemAtual.nome}” ficou reservado no seu nome. Agora é só enviar o PIX abaixo.`
-        : `“${itemAtual.nome}” ficou reservado no seu nome. É só levar no dia do evento, ${dia}.`,
-      pix: forma === "pix" ? itemAtual.valor : null,
-    });
-  }
-
-  function abrirObrigadoPix(nome, valor) {
-    mostrarAgradecimento({
-      sobre: `Contribuição recebida, ${primeiroNome(nome)}`,
-      mensagem: C.mensagemObrigadoPix,
-      instrucao: `Recebemos o seu aviso de ${brl(valor)}. Sua ajuda faz diferença na casa nova.`,
-      pix: null,
-    });
-  }
+  const mostrarConfirmacao = () => mostrarAgradecimento(C.mensagemObrigado);   // reservou um presente
+  const abrirObrigadoPix = () => mostrarAgradecimento(C.mensagemObrigadoPix);  // avisou um PIX
+  $("#mo-fechar").onclick = () => modalObrigado.close();
+  modalObrigado.addEventListener("click", (e) => { if (e.target === modalObrigado) modalObrigado.close(); });
+  modalObrigado.addEventListener("close", () => $("#mo-video").pause());
   // ---------------------------------------------------------------- presença
   document.querySelectorAll('input[name="vai"]').forEach((r) =>
     r.addEventListener("change", () => ($("#p-qtd-bloco").hidden = $("#form-presenca").vai.value === "nao")));

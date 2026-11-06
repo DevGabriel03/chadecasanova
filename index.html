@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,700&family=Jost:wght@300;400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=28">
+  <link rel="stylesheet" href="style.css?v=29">
 </head>
 <body>
   <!-- Ilustrações florais em traço fino (azul serenity), reaproveitadas na página -->
@@ -64,7 +64,6 @@
         <button type="button" data-ir="presentes" class="destaque">Lista de presentes</button>
         <button type="button" data-ir="contribuir">Ajudar com um valor</button>
         <button type="button" data-ir="local">Localização</button>
-        <button type="button" data-ir="agradecimento" id="aba-agradecimento" class="destaque" hidden>Agradecimento</button>
       </nav>
     </div>
   </header>
@@ -212,24 +211,7 @@
         </div>
       </div>
     </section>
-
-    <!-- AGRADECIMENTO (aparece depois de reservar um presente ou avisar um PIX) -->
-    <section id="agradecimento" class="aba agradecimento" hidden>
-      <div class="wrap estreito">
-        <div class="cabeca">
-          <p class="sobre" id="ag-sobre"></p>
-          <h2 class="titulo-aba">Obrigado!</h2>
-          <svg class="arranjo divisor" aria-hidden="true"><use href="#arranjo"/></svg>
-        </div>
-        <video class="m-video" id="ag-video" playsinline controls preload="auto" aria-label="Vídeo de agradecimento de Gabriel e Cecília"></video>
-        <p class="obrigado" id="ag-msg"></p>
-        <p class="lead m-instrucao" id="ag-instrucao"></p>
-        <div id="ag-extra"></div>
-        <div class="acoes">
-          <button type="button" class="btn btn-sec" data-ir="presentes">Voltar para a lista de presentes</button>
-        </div>
-      </div>
-    </section>    </main>
+    </main>
 
   <footer class="rodape"><div class="wrap rodape-in">
     <span><svg class="flor-mini" aria-hidden="true"><use href="#flor"/></svg> Com carinho, Gabriel &amp; Cecília</span>
@@ -264,10 +246,18 @@
     </div>
   </dialog>
 
+  <!-- AGRADECIMENTO: só o vídeo e a mensagem, em 80% da tela -->
+  <dialog id="modal-obrigado" class="dlg-obrigado" aria-label="Agradecimento de Gabriel e Cecília">
+    <button type="button" class="fechar" id="mo-fechar" aria-label="Fechar">×</button>
+    <div class="mo-corpo" id="mo-corpo">
+      <video class="mo-video" id="mo-video" playsinline controls preload="auto" aria-label="Vídeo de agradecimento de Gabriel e Cecília"></video>
+      <p class="obrigado" id="mo-msg"></p>
+    </div>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="config.js?v=28"></script>
-  <script src="app.js?v=28"></script>
+  <script src="config.js?v=29"></script>
+  <script src="app.js?v=29"></script>
 </body>
 </html>
