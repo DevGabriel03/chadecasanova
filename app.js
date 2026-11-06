@@ -224,33 +224,37 @@
   }
 
   // ---------------------------------------------------------------- presentes
+  // Só aparece o que ainda dá para escolher: item com todas as unidades reservadas sai da lista.
+  let listaPronta = false; // só desenha depois de saber o que já foi reservado
+  const restantes = (item) => { const q = item.quantidade || 1; return q - Math.min(contagem(reservas[item.id]), q); };
+
   function montarCategorias() {
-    const cats = ["Todos", ...new Set(C.itens.map((i) => i.categoria).filter(Boolean))];
+    const cats = ["Todos", ...new Set(C.itens.filter((i) => restantes(i) > 0).map((i) => i.categoria).filter(Boolean))];
+    if (!cats.includes(categoria)) categoria = "Todos";
     $("#categorias").innerHTML = "";
     cats.forEach((c) => {
       const b = document.createElement("button");
       b.type = "button"; b.className = "chip"; b.textContent = c;
       b.setAttribute("aria-pressed", c === categoria);
-      b.onclick = () => { categoria = c; montarCategorias(); montarLista(); };
+      b.onclick = () => { categoria = c; montarLista(); };
       $("#categorias").appendChild(b);
     });
   }
 
   function montarLista() {
-    const soDisp = $("#so-disponiveis").checked;
+    if (!listaPronta) return;
+    montarCategorias();
     const ul = $("#lista"); ul.innerHTML = "";
     C.itens.forEach((item) => {
       const qtd = item.quantidade || 1;
-      const feitos = Math.min(contagem(reservas[item.id]), qtd);
-      const esgotado = feitos >= qtd;
+      const faltam = restantes(item);
+      if (faltam <= 0) return;
       if (categoria !== "Todos" && item.categoria !== categoria) return;
-      if (soDisp && esgotado) return;
 
       const li = document.createElement("li");
       const b = document.createElement("button");
-      b.type = "button"; b.className = "etiqueta"; b.disabled = esgotado;
-      const estado = esgotado ? ["fechado", "Já garantido"]
-        : feitos ? ["parcial", `Faltam ${qtd - feitos} de ${qtd}`]
+      b.type = "button"; b.className = "etiqueta";
+      const estado = faltam < qtd ? ["parcial", `Faltam ${faltam} de ${qtd}`]
         : ["livre", qtd > 1 ? `Disponível · ${qtd} unid.` : "Disponível"];
       if (item.foto) b.classList.add("com-foto");
       b.innerHTML = `
@@ -268,16 +272,19 @@
       li.appendChild(b); ul.appendChild(li);
     });
 
-    if (!ul.children.length) ul.innerHTML = '<li class="vazio">Nenhum item disponível neste filtro.</li>';
+    if (!ul.children.length) {
+      const tudo = C.itens.every((i) => restantes(i) <= 0);
+      ul.innerHTML = `<li class="vazio">${tudo ? "Todos os presentes já foram escolhidos. Muito obrigado, família e amigos!" : "Nenhum item disponível neste filtro."}</li>`;
+    }
   }
-
   async function atualizarReservas() {
     try {
       reservas = await buscarReservas();
       $("#carregando").hidden = true;
     } catch {
-      $("#carregando").textContent = "Não foi possível atualizar a lista agora. Tente recarregar a página.";
+      $("#carregando").textContent = "Não foi possível conferir o que já foi escolhido agora. Tente recarregar a página.";
     }
+    listaPronta = true;
     montarLista();
   }
 
@@ -540,9 +547,7 @@
   if (C.PAINEL_URL) { $("#link-admin").href = C.PAINEL_URL; $("#link-admin").hidden = false; }
   if (DEMO && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname))
     $("#aviso-demo").textContent = "Site em preparação: as confirmações e reservas ainda não estão sendo salvas. Volte em breve!";
-  $("#so-disponiveis").addEventListener("change", montarLista);
   montarEvento();
-  montarCategorias();
   montarValores();
   montarLista();
   atualizarReservas();

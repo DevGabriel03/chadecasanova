@@ -204,6 +204,21 @@ legend { font-size: 13px; letter-spacing: .04em; color: var(--tinta-2); margin-b
 .etiqueta .valor.sem-valor { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-2); }
 .etiqueta:disabled .nome, .etiqueta:disabled .valor { color: var(--tinta-2); }
 .vazio { color: var(--tinta-2); grid-column: 1 / -1; text-align: center; }
+
+/* Celular: 2 colunas compactas, para caber 4 presentes de cada vez na tela */
+@media (max-width: 640px) {
+  .presentes { padding-block: 44px; }
+  .etiquetas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .etiqueta { gap: 4px; border-radius: 14px; }
+  .etiqueta.com-foto { padding-bottom: 12px; }
+  .etiqueta .foto-item { aspect-ratio: 1 / .9; margin-bottom: 2px; }
+  .etiqueta .cat, .etiqueta .valor-nota { display: none; }
+  .etiqueta .nome { font-size: 15px; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .etiqueta.com-foto > :not(img) { padding-inline: 8px; }
+  .estado { font-size: 9.5px; letter-spacing: .05em; padding: 3px 8px; text-align: center; }
+  .etiqueta .valor { font-size: 15px; margin-top: 0; }
+  .etiqueta .valor.sem-valor { font-size: 11px; }
+}
 @media (prefers-reduced-motion: reduce) { .etiqueta { transition: none; } .etiqueta:hover:not(:disabled) { transform: none; } }
 
 /* Modal */
@@ -222,10 +237,17 @@ dialog .form { border: 0; padding: 0; background: none; }
 .m-preco-txt .miudo { margin: 0; }
 /* Janela do item: três jeitos de presentear */
 .m-como { margin: 14px 0 8px; }
-.agradecimento { background: linear-gradient(180deg, var(--creme), var(--creme-2)); text-align: center; }
-.agradecimento .m-video { margin: 0 auto 20px; max-height: 60vh; box-shadow: 0 14px 32px rgba(79, 106, 154, .18); }
-.agradecimento .obrigado { margin-top: 0; }
+/* Agradecimento: a seção ocupa 80% da tela, com o vídeo e a mensagem inteira à vista */
+.agradecimento { background: linear-gradient(180deg, var(--creme), var(--creme-2)); text-align: center;
+  min-height: 80vh; min-height: 80svh; display: flex; flex-direction: column; justify-content: center; padding-block: 28px; }
+.agradecimento > .wrap { width: 100%; }
+.agradecimento .cabeca { margin-bottom: 14px; }
+.agradecimento .titulo-aba { font-size: clamp(34px, 7vw, 54px); }
+.agradecimento .divisor { margin-top: 8px; }
+.agradecimento .m-video { margin: 0 auto 18px; max-height: 40vh; width: auto; max-width: 100%; box-shadow: 0 14px 32px rgba(79, 106, 154, .18); }
+.agradecimento .obrigado { margin-top: 0; font-size: clamp(21px, 5.2vw, 30px); line-height: 1.45; }
 .agradecimento .m-instrucao { margin: 18px auto 0; }
+@media (max-width: 640px) { .agradecimento .m-video { max-height: 28vh; } .agradecimento .divisor { display: none; } }
 .agradecimento #ag-extra { text-align: left; }
 .agradecimento .acoes { margin-top: 26px; }
 .m-video { display: block; width: 100%; max-height: 52vh; border-radius: 14px; background: #000; margin: 0 0 16px; }
