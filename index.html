@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,700&family=Jost:wght@300;400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
   <!-- Ilustrações florais em traço fino (azul serenity), reaproveitadas na página -->
@@ -150,6 +150,7 @@
           <h2 class="titulo-aba titulo-maior">Lista de presentes</h2>
           <svg class="arranjo divisor" aria-hidden="true"><use href="#arranjo"/></svg>
           <p class="lead">Escolha um presente para deixar o nosso lar com a nossa cara. Você pode levar no dia ou enviar o valor por PIX.</p>
+          <p class="miudo nota-lista">As fotos são ilustrativas. Os valores são médias de mercado em Brasília-DF.</p>
         </div>
         <div class="filtros">
           <div class="chips" id="categorias" role="group" aria-label="Filtrar por cômodo"></div>
@@ -222,9 +223,11 @@
   <dialog id="modal" aria-labelledby="m-titulo">
     <button type="button" class="fechar" id="m-fechar" aria-label="Fechar">×</button>
     <div id="m-passo1">
+      <img class="m-foto" id="m-foto" alt="" hidden>
       <p class="sobre" id="m-categoria"></p>
       <h2 id="m-titulo"></h2>
       <p class="preco" id="m-valor"></p>
+      <p class="miudo m-nota" id="m-valor-nota">Valor médio de mercado em Brasília-DF. A foto é ilustrativa.</p>
       <p class="miudo m-como">Escolha como você quer presentear:</p>
       <div class="m-abas" id="m-abas" role="tablist" aria-label="Como presentear">
         <button type="button" role="tab" data-forma="modelo" aria-selected="true">Modelo que queremos</button>
@@ -249,7 +252,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="config.js?v=20"></script>
-  <script src="app.js?v=20"></script>
+  <script src="config.js?v=21"></script>
+  <script src="app.js?v=21"></script>
 </body>
 </html>

@@ -251,11 +251,15 @@
       const estado = esgotado ? ["fechado", "Já garantido"]
         : feitos ? ["parcial", `Faltam ${qtd - feitos} de ${qtd}`]
         : ["livre", qtd > 1 ? `Disponível · ${qtd} unid.` : "Disponível"];
+      if (item.foto) b.classList.add("com-foto");
       b.innerHTML = `
+        ${item.foto ? '<img class="foto-item" loading="lazy" alt="">' : ""}
         <span class="cat"></span>
         <span class="nome"></span>
         <span class="estado ${estado[0]}">${estado[1]}</span>
-        <span class="valor${item.valor ? "" : " sem-valor"}">${item.valor ? brl(item.valor) : "Valor a confirmar"}</span>`;
+        <span class="valor${item.valor ? "" : " sem-valor"}">${item.valor ? brl(item.valor) : "Valor a confirmar"}</span>
+        ${item.valor ? '<span class="valor-nota">valor médio</span>' : ""}`;
+      if (item.foto) b.querySelector("img").src = item.foto;
       b.querySelector(".cat").textContent = item.categoria || "";
       b.querySelector(".nome").textContent = item.nome;
       b.setAttribute("aria-label", `${item.nome}, ${item.valor ? brl(item.valor) : "valor a confirmar"}, ${estado[1]}`);
@@ -290,6 +294,10 @@
     $("#m-categoria").textContent = item.categoria || "Presente";
     $("#m-titulo").textContent = item.nome;
     $("#m-valor").textContent = item.valor ? brl(item.valor) : "Valor a confirmar";
+    $("#m-valor-nota").hidden = !item.valor;
+    const foto = $("#m-foto");
+    foto.hidden = !item.foto;
+    if (item.foto) { foto.src = item.foto; foto.alt = item.nome; }
     $("#r-erro").hidden = true;
     $("#r-cpf").removeAttribute("aria-invalid");
     escolherForma("modelo");
