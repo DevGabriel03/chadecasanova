@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,700&family=Jost:wght@300;400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=25">
+  <link rel="stylesheet" href="style.css?v=26">
 </head>
 <body>
   <!-- Ilustrações florais em traço fino (azul serenity), reaproveitadas na página -->
@@ -248,10 +248,20 @@
     <div id="m-passo2" hidden></div>
   </dialog>
 
+  <!-- AGRADECIMENTO DA CONTRIBUIÇÃO POR PIX -->
+  <dialog id="modal-obrigado" aria-label="Agradecimento pela contribuição">
+    <button type="button" class="fechar" id="mo-fechar" aria-label="Fechar">×</button>
+    <video class="m-video" id="mo-video" playsinline controls preload="auto" aria-label="Vídeo de agradecimento de Gabriel e Cecília"></video>
+    <p class="sobre" id="mo-sobre"></p>
+    <p class="obrigado" id="mo-msg"></p>
+    <p class="lead m-instrucao" id="mo-valor"></p>
+    <div class="acoes"><button type="button" class="btn btn-sec" id="mo-ok">Fechar</button></div>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="config.js?v=25"></script>
-  <script src="app.js?v=25"></script>
+  <script src="config.js?v=26"></script>
+  <script src="app.js?v=26"></script>
 </body>
 </html>

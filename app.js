@@ -408,6 +408,27 @@
     }
   }
   modal.addEventListener("close", () => { const v = $("#m-passo2 video"); if (v) v.pause(); });
+  // Janela própria de agradecimento para quem enviou um valor por PIX (aba "Ajudar com um valor"):
+  // mesmo vídeo, mas com a mensagem de contribuição (não a de presente).
+  const modalObrigado = $("#modal-obrigado");
+  function abrirObrigadoPix(nome, valor) {
+    $("#mo-sobre").textContent = `Contribuição recebida, ${primeiroNome(nome)}`;
+    $("#mo-msg").textContent = C.mensagemObrigadoPix || "";
+    $("#mo-valor").textContent = `Recebemos o seu aviso de ${brl(valor)}. Sua ajuda faz diferença na casa nova.`;
+    const video = $("#mo-video");
+    video.hidden = !C.videoObrigado;
+    modalObrigado.showModal();
+    modalObrigado.scrollTop = 0;
+    if (C.videoObrigado) {
+      video.src = C.videoObrigado;
+      video.currentTime = 0;
+      video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
+    }
+  }
+  $("#mo-fechar").onclick = $("#mo-ok").onclick = () => modalObrigado.close();
+  modalObrigado.addEventListener("click", (e) => { if (e.target === modalObrigado) modalObrigado.close(); });
+  modalObrigado.addEventListener("close", () => $("#mo-video").pause());
+
   // ---------------------------------------------------------------- presença
   document.querySelectorAll('input[name="vai"]').forEach((r) =>
     r.addEventListener("change", () => ($("#p-qtd-bloco").hidden = $("#form-presenca").vai.value === "nao")));
@@ -512,6 +533,7 @@
       const ok = $("#contribuir-ok");
       ok.innerHTML = `<h2>Muito obrigado!</h2><p>Recebemos seu aviso de ${brl(valorEscolhido)}. Sua ajuda faz diferença na casa nova.</p>`;
       ok.hidden = false;
+      abrirObrigadoPix(f.nome.value.trim(), valorEscolhido);
     } catch {
       erro.textContent = "Não deu para enviar o aviso agora. Tente de novo em instantes.";
       erro.hidden = false;

@@ -53,6 +53,14 @@ window.CONFIG = {
     "Já estamos contando os dias para comemorar juntos! Estaremos te esperando ✨🥂\n\n" +
     "Gabriel e Cecília 🤵🏽👰🏻‍♀️",
 
+  // Tela de agradecimento de quem avisa que enviou um valor por PIX (aba "Ajudar com um valor").
+  // Texto sugerido no mesmo tom da mensagem de presente: troque pelo que preferir.
+  mensagemObrigadoPix:
+    "💙 Muito obrigado pela sua contribuição e por abençoar a nossa história.\n" +
+    "Cada detalhe da nossa casa nova vai ter um pouquinho de você.\n" +
+    "Já estamos contando os dias para comemorar juntos! Estaremos te esperando ✨🥂\n\n" +
+    "Gabriel e Cecília 🤵🏽👰🏻‍♀️",
+
   // Aba "Ajudar com um valor": valor mínimo aceito e valores sugeridos
   valorMinimo: 100,
   valoresSimbolicos: [100, 200, 300, 500],
