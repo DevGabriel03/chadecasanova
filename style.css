@@ -222,6 +222,12 @@ dialog .form { border: 0; padding: 0; background: none; }
 .m-preco-txt .miudo { margin: 0; }
 /* Janela do item: três jeitos de presentear */
 .m-como { margin: 14px 0 8px; }
+.agradecimento { background: linear-gradient(180deg, var(--creme), var(--creme-2)); text-align: center; }
+.agradecimento .m-video { margin: 0 auto 20px; max-height: 60vh; box-shadow: 0 14px 32px rgba(79, 106, 154, .18); }
+.agradecimento .obrigado { margin-top: 0; }
+.agradecimento .m-instrucao { margin: 18px auto 0; }
+.agradecimento #ag-extra { text-align: left; }
+.agradecimento .acoes { margin-top: 26px; }
 .m-video { display: block; width: 100%; max-height: 52vh; border-radius: 14px; background: #000; margin: 0 0 16px; }
 .obrigado { white-space: pre-line; font: 400 clamp(19px, 3.6vw, 22px)/1.5 var(--fonte-titulo); color: var(--serenity-escuro); margin: 6px 0 0; }
 .m-instrucao { margin: 16px 0 0; font-size: 15px; }
