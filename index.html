@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,700&family=Jost:wght@300;400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
   <!-- Ilustrações florais em traço fino (azul serenity), reaproveitadas na página -->
@@ -128,7 +128,7 @@
           </div>
 
           <label for="p-tel">WhatsApp (opcional)</label>
-          <input id="p-tel" name="telefone" type="tel" autocomplete="tel" placeholder="(61) 99999-9999">
+          <input id="p-tel" name="telefone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="15" placeholder="(61) 99999-9999">
 
           <label for="p-recado">Recado para o casal (opcional)</label>
           <textarea id="p-recado" name="recado" rows="3"></textarea>
@@ -254,7 +254,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="config.js?v=16"></script>
-  <script src="app.js?v=16"></script>
+  <script src="config.js?v=17"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

@@ -141,9 +141,12 @@ function doPost(e) {
     }
 
     if (d.acao === "presenca") {
+      // WhatsApp: vazio ou exatamente 11 números (DDD + 9 dígitos)
+      const tel = String(d.telefone || "").replace(/\D/g, "");
+      if (tel && tel.length !== 11) return resposta({ ok: false, erro: "telefone" });
       aba("Presenças").appendRow([agora, texto(d.nome), d.vai === "sim" ? "Sim" : "Não",
         Number(d.pessoas) || 0, texto((d.acompanhantes || []).join(", "), 500),
-        texto(d.telefone, 30), texto(d.recado, 500)]);
+        tel ? "'" + tel : "", texto(d.recado, 500)]);
       return resposta({ ok: true });
     }
 

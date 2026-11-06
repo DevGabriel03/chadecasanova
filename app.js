@@ -60,6 +60,13 @@
     }
     return true;
   }
+  // Celular com DDD: exatamente 11 números, mostrado como (61) 98305-4422
+  function mascaraTel(v) {
+    const d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 2) return d;
+    if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+    return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  }
   function mascaraCpf(v) {
     const d = v.replace(/\D/g, "").slice(0, 11);
     return d.replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
@@ -377,12 +384,19 @@
     }
   }
   $("#p-qtd").addEventListener("input", montarAcompanhantes);
+  $("#p-tel").addEventListener("input", (e) => (e.target.value = mascaraTel(e.target.value)));
 
   $("#form-presenca").addEventListener("submit", async (e) => {
     e.preventDefault();
     const f = e.target, erro = $("#p-erro"), botao = f.querySelector("button[type=submit]");
     erro.hidden = true;
     if (f.nome.value.trim().length < 3) { erro.textContent = "Escreva seu nome."; erro.hidden = false; f.nome.focus(); return; }
+    const telefone = f.telefone.value.replace(/\D/g, "");
+    if (telefone && telefone.length !== 11) {
+      erro.textContent = "O WhatsApp precisa ter 11 números: DDD + 9 dígitos. Exemplo: (61) 98305-4422.";
+      erro.hidden = false; f.telefone.setAttribute("aria-invalid", "true"); f.telefone.focus(); return;
+    }
+    f.telefone.removeAttribute("aria-invalid");
     const vai = f.vai.value;
     const campos = vai === "sim" ? [...$("#p-acomp").querySelectorAll("input")] : [];
     const vazio = campos.find((i) => !i.value.trim());
@@ -393,7 +407,7 @@
       const r = await enviar({
         acao: "presenca", nome: f.nome.value.trim(), vai,
         pessoas: vai === "sim" ? 1 + acompanhantes.length : 0,
-        acompanhantes, telefone: f.telefone.value.trim(), recado: f.recado.value.trim(),
+        acompanhantes, telefone, recado: f.recado.value.trim(),
       });
       if (!r.ok) throw new Error();
       f.hidden = true;

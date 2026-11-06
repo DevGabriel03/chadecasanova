@@ -82,13 +82,27 @@
   const cpfBR = (c) => String(c || "").replace(/\D/g, "").padStart(11, "0").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
   let dados = null, abaAtual = "presencas", pendente = null;
 
+  const telBR = (t) => { const d = String(t || "").replace(/\D/g, ""); return d.length === 11 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : String(t || ""); };
+
+  // Cruza presença e presente pelo nome digitado (sem acento, maiúscula ou espaço sobrando)
+  const norm = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+  const reservasDe = (nome) => dados.reservas.filter((x) => norm(x["Nome"]) === norm(nome));
+  const confirmou = (nome) => dados.presencas.some((p) => p["Vem?"] === "Sim" && norm(p["Nome"]) === norm(nome));
+  const levarTexto = (nome) => reservasDe(nome).map((x) => `${x["Item"]} (${x["Forma"]})`).join("; ") || "Nada escolhido";
+  function levarHtml(nome) {
+    const l = reservasDe(nome);
+    if (!l.length) return `<span class="chip nao">Nada escolhido</span>`;
+    return l.map((x) => `<div>${esc(x["Item"])} <span class="chip">${esc(x["Forma"])}</span></div>`).join("");
+  }
+
   const COLUNAS = {
     presencas: { aba: "Presenças", nome: "Nome", cols: [
       ["Nome", (r) => r["Nome"]],
       ["Vem?", (r) => r["Vem?"], (r) => `<span class="chip ${r["Vem?"] === "Sim" ? "" : "nao"}">${esc(r["Vem?"])}</span>`],
       ["Pessoas", (r) => r["Pessoas"], null, "num"],
+      ["Vai levar", (r) => levarTexto(r["Nome"]), (r) => levarHtml(r["Nome"])],
       ["Acompanhantes", (r) => r["Acompanhantes"]],
-      ["WhatsApp", (r) => r["WhatsApp"]],
+      ["WhatsApp", (r) => telBR(r["WhatsApp"]), null, "num"],
       ["Recado", (r) => r["Recado"]],
       ["Quando", (r) => dataBR(r["Data"]), null, "num"],
     ]},
@@ -97,6 +111,8 @@
       ["Quem", (r) => r["Nome"]],
       ["CPF", (r) => cpfBR(r["CPF"]), null, "num"],
       ["Como", (r) => r["Forma"], (r) => `<span class="chip">${esc(r["Forma"])}</span>`],
+      ["Presença", (r) => (confirmou(r["Nome"]) ? "Confirmou" : "Não confirmou"),
+        (r) => confirmou(r["Nome"]) ? `<span class="chip">Confirmou</span>` : `<span class="chip nao" title="Escolheu um presente, mas não preencheu a confirmação de presença (ou digitou o nome diferente)">Não confirmou</span>`],
       ["Valor", (r) => brl(r["Valor"]), null, "num"],
       ["Quando", (r) => dataBR(r["Data"]), null, "num"],
     ]},
@@ -119,7 +135,7 @@
     dados = d; pendente = null;
     document.getElementById("planilha").href = d.planilha;
     const b = document.getElementById("atualizar"); b.disabled = false; b.textContent = "Atualizar";
-    document.getElementById("rodape").textContent = "Atualizado às " + new Date(d.agora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + ".";
+    document.getElementById("rodape").textContent = "Atualizado às " + new Date(d.agora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + ". O presente de cada pessoa é ligado à confirmação pelo nome digitado nos dois formulários.";
     montarResumo(); montarTabela();
   }
   function falhar(e) {
