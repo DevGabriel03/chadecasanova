@@ -190,7 +190,7 @@ legend { font-size: 13px; letter-spacing: .04em; color: var(--tinta-2); margin-b
 .etiqueta:disabled .foto-item { opacity: .45; filter: grayscale(.6); }
 .valor-nota { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-2); margin-top: -4px; }
 .nota-lista { margin: 10px auto 0; }
-.m-foto { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 14px; margin: 0 0 14px; background: var(--creme-2); }
+.m-foto { display: block; width: 100%; max-width: 300px; margin-inline: auto; aspect-ratio: 1; object-fit: cover; border-radius: 14px; margin: 0 0 14px; background: var(--creme-2); }
 .m-nota { margin: 4px 0 0; }
 .etiqueta:hover:not(:disabled) { border-color: var(--serenity); box-shadow: 0 12px 28px rgba(79, 106, 154, .12); transform: translateY(-2px); }
 .etiqueta:disabled { cursor: default; background: var(--creme); }
