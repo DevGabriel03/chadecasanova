@@ -390,12 +390,29 @@
   // Depois de reservar um presente ou avisar um PIX, aparece SÓ o vídeo do casal e a mensagem,
   // numa janela que ocupa 80% da tela. A mensagem muda conforme o caso.
   const modalObrigado = $("#modal-obrigado");
+
+  // Encolhe a letra (até 15px) e depois o vídeo até a mensagem inteira caber, sem precisar rolar.
+  function ajustarAgradecimento() {
+    if (!modalObrigado.open) return;
+    const corpo = $("#mo-corpo"), msg = $("#mo-msg"), video = $("#mo-video");
+    msg.style.fontSize = ""; video.style.maxHeight = "";
+    const cabe = () => corpo.scrollHeight <= corpo.clientHeight + 1;
+    let fonte = parseFloat(getComputedStyle(msg).fontSize);
+    while (!cabe() && fonte > 15) { fonte -= 0.5; msg.style.fontSize = fonte + "px"; }
+    let alturaVideo = video.getBoundingClientRect().height;
+    while (!cabe() && alturaVideo > 60) { alturaVideo -= 6; video.style.maxHeight = alturaVideo + "px"; }
+    corpo.scrollTop = 0;
+  }
+  window.addEventListener("resize", ajustarAgradecimento);
+  $("#mo-video").addEventListener("loadedmetadata", ajustarAgradecimento);
+
   function mostrarAgradecimento(mensagem) {
     if (modal.open) modal.close();
     $("#mo-msg").textContent = mensagem || "";
     const video = $("#mo-video");
     video.hidden = !C.videoObrigado;
     modalObrigado.showModal();
+    ajustarAgradecimento();
     $("#mo-corpo").scrollTop = 0;
     if (C.videoObrigado) {
       if (!video.getAttribute("src")) video.src = C.videoObrigado;
