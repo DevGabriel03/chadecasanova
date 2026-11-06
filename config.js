@@ -57,6 +57,10 @@ window.CONFIG = {
 
   // Lista de presentes. "id" precisa ser único e não deve mudar depois que
   // alguém reservar. "quantidade" é quantas unidades você precisa.
+  // Opcionais, para a aba "Modelo que queremos" de cada item:
+  //   link:   endereço da loja do modelo de preferência de vocês
+  //   modelo: nome do modelo, por exemplo "Fogão 5 bocas Brastemp inox"
+  // Sem "link", a aba avisa que o modelo ainda será indicado.
   itens: [
     { id: "panelas",       nome: "Jogo de panelas antiaderente", valor: 350, categoria: "Cozinha",   quantidade: 1 },
     { id: "copos",         nome: "Jogo de 6 copos de vidro",     valor: 60,  categoria: "Cozinha",   quantidade: 2 },

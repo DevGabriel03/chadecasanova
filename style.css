@@ -209,6 +209,20 @@ dialog .form { border: 0; padding: 0; background: none; }
   background: var(--creme); border: 1px solid var(--linha); border-radius: 14px; padding: 14px 16px; margin: 14px 0; }
 .m-preco-txt { min-width: 0; display: grid; gap: 8px; justify-items: start; }
 .m-preco-txt .miudo { margin: 0; }
+/* Janela do item: três jeitos de presentear */
+.m-como { margin: 14px 0 8px; }
+.m-abas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: var(--creme-2); border-radius: 14px; padding: 4px; }
+.m-abas button { font: 400 13px/1.25 var(--fonte-texto); color: var(--tinta-2); background: none; border: 0; border-radius: 11px;
+  padding: 10px 6px; cursor: pointer; text-align: center; }
+.m-abas button:hover { color: var(--serenity-escuro); }
+.m-abas button[aria-selected="true"] { background: var(--papel); color: var(--serenity-escuro); font-weight: 500; box-shadow: 0 1px 6px rgba(79, 106, 154, .18); }
+.m-painel { display: grid; gap: 12px; justify-items: start; margin: 14px 0 6px; padding: 16px; background: var(--creme);
+  border: 1px solid var(--linha); border-radius: 14px; }
+.m-painel .m-texto { margin: 0; color: var(--tinta); }
+.m-painel .miudo { margin: 0; }
+.m-painel .pix { margin: 0; padding: 0; border: 0; background: none; width: 100%; }
+dialog .form h3 { font-size: 24px; text-align: left; }
+@media (max-width: 430px) { .m-abas button { font-size: 12px; padding: 9px 4px; } }
 .mini-qr { flex: none; background: #fff; padding: 6px; border-radius: 10px; line-height: 0; }
 .mini-qr img, .mini-qr canvas { width: 92px !important; height: 92px !important; }
 .fechar { position: absolute; top: 14px; right: 16px; font-size: 28px; line-height: 1; background: none; border: 0; color: var(--tinta-2); cursor: pointer; padding: 4px 8px; border-radius: 8px; }

@@ -7,6 +7,13 @@
  * ou use o Painel do anfitrião (arquivo Admin.html, só abre para a conta DONO).
  */
 
+// Como a pessoa vai presentear (aba escolhida no site)
+const FORMAS = {
+  modelo: "Leva o modelo indicado",
+  pix: "PIX",
+  livre: "Leva de sua preferência",
+};
+
 const ABAS = {
   Reservas: ["Data", "ID do item", "Item", "Valor", "Nome", "CPF", "Forma"],
   "Presenças": ["Data", "Nome", "Vem?", "Pessoas", "Acompanhantes", "WhatsApp", "Recado"],
@@ -136,14 +143,14 @@ function doPost(e) {
       if (atuais >= Number(d.limite || 1)) return resposta({ ok: false, erro: "esgotado" });
       // "'" na frente mantém os zeros à esquerda do CPF
       aba("Reservas").appendRow([agora, texto(d.itemId, 60), texto(d.item), Number(d.valor) || 0,
-        texto(d.nome), "'" + cpf, d.forma === "pix" ? "PIX" : "Leva no dia"]);
+        texto(d.nome), "'" + cpf, FORMAS[d.forma] || "Leva no dia"]);
       return resposta({ ok: true, reservas: lerReservas() });
     }
 
     if (d.acao === "presenca") {
-      // WhatsApp: vazio ou exatamente 11 números (DDD + 9 dígitos)
+      // WhatsApp: vazio ou celular brasileiro (DDD 11-99 + 9 + 8 dígitos)
       const tel = String(d.telefone || "").replace(/\D/g, "");
-      if (tel && tel.length !== 11) return resposta({ ok: false, erro: "telefone" });
+      if (tel && !/^[1-9][1-9]9\d{8}$/.test(tel)) return resposta({ ok: false, erro: "telefone" });
       aba("Presenças").appendRow([agora, texto(d.nome), d.vai === "sim" ? "Sim" : "Não",
         Number(d.pessoas) || 0, texto((d.acompanhantes || []).join(", "), 500),
         tel ? "'" + tel : "", texto(d.recado, 500)]);

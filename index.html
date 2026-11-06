@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,700&family=Jost:wght@300;400;500&display=swap">
-  <link rel="stylesheet" href="style.css?v=17">
+  <link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
   <!-- Ilustrações florais em traço fino (azul serenity), reaproveitadas na página -->
@@ -127,7 +127,7 @@
             <div id="p-acomp" class="acomp"></div>
           </div>
 
-          <label for="p-tel">WhatsApp (opcional)</label>
+          <label for="p-tel">WhatsApp com DDD (opcional)</label>
           <input id="p-tel" name="telefone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="15" placeholder="(61) 99999-9999">
 
           <label for="p-recado">Recado para o casal (opcional)</label>
@@ -224,26 +224,21 @@
     <div id="m-passo1">
       <p class="sobre" id="m-categoria"></p>
       <h2 id="m-titulo"></h2>
-      <div class="m-preco">
-        <div class="m-preco-txt">
-          <p class="preco" id="m-valor"></p>
-          <p class="miudo">Prefere mandar o valor em vez de levar o item no dia? Pague por PIX.</p>
-          <button type="button" class="btn btn-pri btn-p" id="m-pagar" aria-expanded="false" aria-controls="m-pix-agora">Pagar com PIX</button>
-        </div>
-        <div class="mini-qr" id="m-qr" aria-label="QR Code do PIX com o valor do item"></div>
+      <p class="preco" id="m-valor"></p>
+      <p class="miudo m-como">Escolha como você quer presentear:</p>
+      <div class="m-abas" id="m-abas" role="tablist" aria-label="Como presentear">
+        <button type="button" role="tab" data-forma="modelo" aria-selected="true">Modelo que queremos</button>
+        <button type="button" role="tab" data-forma="pix" aria-selected="false" tabindex="-1">Enviar o valor (PIX)</button>
+        <button type="button" role="tab" data-forma="livre" aria-selected="false" tabindex="-1">Levar o seu</button>
       </div>
-      <div id="m-pix-agora" hidden></div>
+      <div class="m-painel" id="m-painel" role="tabpanel"></div>
       <form id="form-reserva" class="form" novalidate>
+        <h3>Reservar no seu nome</h3>
         <label for="r-nome">Seu nome completo</label>
         <input id="r-nome" name="nome" autocomplete="name" required>
         <label for="r-cpf">CPF</label>
         <input id="r-cpf" name="cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" required>
         <p class="miudo">Seu nome e CPF ficam só com o casal. Eles não aparecem no site.</p>
-        <fieldset>
-          <legend>Como você vai presentear?</legend>
-          <label class="opcao"><input type="radio" name="forma" value="levar" checked> Vou levar o presente no dia do evento</label>
-          <label class="opcao"><input type="radio" name="forma" value="pix"> Vou mandar o valor por PIX</label>
-        </fieldset>
         <p class="erro" id="r-erro" hidden></p>
         <button class="btn btn-pri" type="submit" id="r-enviar">Reservar este presente</button>
       </form>
@@ -254,7 +249,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="config.js?v=17"></script>
-  <script src="app.js?v=17"></script>
+  <script src="config.js?v=18"></script>
+  <script src="app.js?v=18"></script>
 </body>
 </html>

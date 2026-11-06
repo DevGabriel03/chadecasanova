@@ -60,7 +60,8 @@
     }
     return true;
   }
-  // Celular com DDD: exatamente 11 números, mostrado como (61) 98305-4422
+  // Celular brasileiro: DDD (11 a 99) + 9 + 8 dígitos = 11 números, mostrado como (61) 98305-4422
+  const telefoneValido = (d) => /^[1-9][1-9]9\d{8}$/.test(d);
   function mascaraTel(v) {
     const d = v.replace(/\D/g, "").slice(0, 11);
     if (d.length <= 2) return d;
@@ -276,39 +277,71 @@
   }
 
   // ---------------------------------------------------------------- modal de reserva
+  // Três jeitos de presentear (a aba ativa é a forma gravada na planilha):
+  //   modelo = comprar o modelo que o casal escolheu (link do item)
+  //   pix    = enviar o valor do item por PIX
+  //   livre  = levar um item de sua preferência
   const modal = $("#modal");
+  let formaAtual = "modelo";
+
   function abrirItem(item) {
     itemAtual = item;
     $("#m-passo1").hidden = false; $("#m-passo2").hidden = true;
     $("#m-categoria").textContent = item.categoria || "Presente";
     $("#m-titulo").textContent = item.nome;
     $("#m-valor").textContent = brl(item.valor);
-    const codigo = pixCodigo(item.valor);
-    const qr = $("#m-qr"); qr.innerHTML = "";
-    if (window.QRCode) new QRCode(qr, { text: codigo, width: 240, height: 240, correctLevel: QRCode.CorrectLevel.M });
-    else qr.hidden = true;
-    mostrarPixAgora(false);
     $("#r-erro").hidden = true;
     $("#r-cpf").removeAttribute("aria-invalid");
+    escolherForma("modelo");
     modal.showModal();
-    $("#r-nome").focus();
+    modal.scrollTop = 0;
   }
-  // "Pagar com PIX": abre valor, chave e copia e cola do item, e já marca a forma PIX
-  function mostrarPixAgora(abrir) {
-    const caixa = $("#m-pix-agora"), botao = $("#m-pagar");
-    caixa.hidden = !abrir;
-    $("#m-qr").hidden = abrir; // o QR grande já aparece na caixa aberta
-    botao.setAttribute("aria-expanded", abrir);
-    botao.textContent = abrir ? "Esconder PIX" : "Pagar com PIX";
-    if (!abrir) { caixa.innerHTML = ""; return; }
-    caixaPix(caixa, itemAtual.valor);
-    caixa.insertAdjacentHTML("beforeend",
-      '<p class="miudo pix-aviso">Depois de pagar, preencha seu nome e CPF abaixo para o presente ficar marcado no seu nome.</p>');
-    $("#form-reserva").forma.value = "pix";
+
+  function escolherForma(forma) {
+    formaAtual = forma;
+    document.querySelectorAll("#m-abas [role=tab]").forEach((b) => {
+      const ativa = b.dataset.forma === forma;
+      b.setAttribute("aria-selected", ativa);
+      b.tabIndex = ativa ? 0 : -1;
+    });
+    const painel = $("#m-painel");
+    painel.innerHTML = "";
+    if (forma === "modelo") {
+      if (itemAtual.link) {
+        painel.innerHTML = `<p class="m-texto"></p>
+          <a class="btn btn-pri btn-p" target="_blank" rel="noopener">Ver o modelo escolhido</a>
+          <p class="miudo">Comprou? É só levar no dia do evento, ${esc(C.dataTexto.toLowerCase())}.</p>`;
+        painel.querySelector(".m-texto").textContent = itemAtual.modelo
+          ? `O modelo que escolhemos: ${itemAtual.modelo}.`
+          : "Este é o modelo que escolhemos para a nossa casa.";
+        painel.querySelector("a").href = itemAtual.link;
+      } else {
+        painel.innerHTML = `<p class="m-texto">Ainda vamos indicar o modelo de nossa preferência para este item.
+          Enquanto isso, você pode enviar o valor por PIX ou levar o presente que preferir.</p>`;
+      }
+    } else if (forma === "pix") {
+      caixaPix(painel, itemAtual.valor);
+    } else {
+      painel.innerHTML = `<p class="m-texto"></p>
+        <p class="miudo">Leve no dia do evento, ${esc(C.dataTexto.toLowerCase())}.</p>`;
+      painel.querySelector(".m-texto").textContent =
+        `Você também pode levar “${itemAtual.nome}” do modelo, da cor e da marca que preferir. Vamos adorar!`;
+    }
+    $("#r-enviar").textContent = "Reservar este presente";
   }
-  $("#m-pagar").onclick = () => mostrarPixAgora($("#m-pix-agora").hidden);
-  document.querySelectorAll('#form-reserva input[name="forma"]').forEach((r) =>
-    r.addEventListener("change", () => { if (r.checked && r.value === "pix" && $("#m-pix-agora").hidden) mostrarPixAgora(true); }));
+
+  // abas com setas do teclado
+  $("#m-abas").addEventListener("click", (e) => {
+    const b = e.target.closest("[role=tab]"); if (b) escolherForma(b.dataset.forma);
+  });
+  $("#m-abas").addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const abas = [...document.querySelectorAll("#m-abas [role=tab]")];
+    const i = abas.findIndex((b) => b.dataset.forma === formaAtual);
+    const prox = abas[(i + (e.key === "ArrowRight" ? 1 : abas.length - 1)) % abas.length];
+    escolherForma(prox.dataset.forma); prox.focus();
+  });
+
   $("#m-fechar").onclick = () => modal.close();
   modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
   $("#r-cpf").addEventListener("input", (e) => (e.target.value = mascaraCpf(e.target.value)));
@@ -316,7 +349,7 @@
   $("#form-reserva").addEventListener("submit", async (e) => {
     e.preventDefault();
     const f = e.target, erro = $("#r-erro");
-    const nome = f.nome.value.trim(), cpf = f.cpf.value, forma = f.forma.value;
+    const nome = f.nome.value.trim(), cpf = f.cpf.value, forma = formaAtual;
     erro.hidden = true;
     if (nome.split(/\s+/).length < 2) { erro.textContent = "Escreva seu nome e sobrenome."; erro.hidden = false; f.nome.focus(); return; }
     if (!cpfValido(cpf)) { erro.textContent = "Esse CPF não parece válido. Confira os números."; erro.hidden = false; f.cpf.setAttribute("aria-invalid", "true"); f.cpf.focus(); return; }
@@ -354,16 +387,23 @@
       <p class="sobre">Reserva feita</p>
       <h2>Obrigado, ${esc(primeiroNome(nome))}!</h2>
       <p class="lead" style="margin-bottom:0"></p>
-      <div id="m-pix"></div>
+      <div id="m-extra"></div>
       <div class="acoes"><button type="button" class="btn btn-sec" id="m-ok">Voltar para a lista</button></div>`;
-    p2.querySelector(".lead").textContent = forma === "pix"
-      ? `“${itemAtual.nome}” ficou reservado no seu nome. Agora é só mandar o PIX abaixo.`
-      : `“${itemAtual.nome}” ficou reservado no seu nome. É só levar no dia do evento, ${C.dataTexto.toLowerCase()}.`;
-    if (forma === "pix") caixaPix(p2.querySelector("#m-pix"), itemAtual.valor);
+    const lead = p2.querySelector(".lead"), extra = p2.querySelector("#m-extra");
+    const dia = C.dataTexto.toLowerCase();
+    if (forma === "pix") {
+      lead.textContent = `“${itemAtual.nome}” ficou reservado no seu nome. Agora é só enviar o PIX abaixo.`;
+      caixaPix(extra, itemAtual.valor);
+    } else if (forma === "modelo" && itemAtual.link) {
+      lead.textContent = `“${itemAtual.nome}” ficou reservado no seu nome. É só levar o modelo escolhido no dia do evento, ${dia}.`;
+      extra.innerHTML = '<a class="btn btn-sec btn-p" target="_blank" rel="noopener">Ver o modelo escolhido</a>';
+      extra.querySelector("a").href = itemAtual.link;
+    } else {
+      lead.textContent = `“${itemAtual.nome}” ficou reservado no seu nome. É só levar no dia do evento, ${dia}.`;
+    }
     $("#m-passo1").hidden = true; p2.hidden = false;
     p2.querySelector("#m-ok").onclick = () => modal.close();
   }
-
   // ---------------------------------------------------------------- presença
   document.querySelectorAll('input[name="vai"]').forEach((r) =>
     r.addEventListener("change", () => ($("#p-qtd-bloco").hidden = $("#form-presenca").vai.value === "nao")));
@@ -392,8 +432,8 @@
     erro.hidden = true;
     if (f.nome.value.trim().length < 3) { erro.textContent = "Escreva seu nome."; erro.hidden = false; f.nome.focus(); return; }
     const telefone = f.telefone.value.replace(/\D/g, "");
-    if (telefone && telefone.length !== 11) {
-      erro.textContent = "O WhatsApp precisa ter 11 números: DDD + 9 dígitos. Exemplo: (61) 98305-4422.";
+    if (telefone && !telefoneValido(telefone)) {
+      erro.textContent = "Digite o celular com DDD no padrão (61) 98305-4422: 11 números, começando pelo DDD e com o 9 depois dele.";
       erro.hidden = false; f.telefone.setAttribute("aria-invalid", "true"); f.telefone.focus(); return;
     }
     f.telefone.removeAttribute("aria-invalid");
