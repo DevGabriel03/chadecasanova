@@ -191,6 +191,7 @@ legend { font-size: 13px; letter-spacing: .04em; color: var(--tinta-2); margin-b
 .estado { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; }
 .estado.livre, .estado.parcial { background: var(--serenity-claro); color: var(--serenity-escuro); }
 .estado.fechado { background: var(--creme-2); color: var(--tinta-2); }
+.etiqueta .valor.sem-valor { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-2); }
 .etiqueta:disabled .nome, .etiqueta:disabled .valor { color: var(--tinta-2); }
 .vazio { color: var(--tinta-2); grid-column: 1 / -1; text-align: center; }
 @media (prefers-reduced-motion: reduce) { .etiqueta { transition: none; } .etiqueta:hover:not(:disabled) { transform: none; } }

@@ -61,18 +61,19 @@ window.CONFIG = {
   //   link:   endereço da loja do modelo de preferência de vocês
   //   modelo: nome do modelo, por exemplo "Fogão 5 bocas Brastemp inox"
   // Sem "link", a aba avisa que o modelo ainda será indicado.
+  // "valor" em reais: enquanto estiver vazio (null), o item aparece como
+  // "Valor a confirmar" e a aba do PIX avisa que o valor ainda será informado.
   itens: [
-    { id: "panelas",       nome: "Jogo de panelas antiaderente", valor: 350, categoria: "Cozinha",   quantidade: 1 },
-    { id: "copos",         nome: "Jogo de 6 copos de vidro",     valor: 60,  categoria: "Cozinha",   quantidade: 2 },
-    { id: "talheres",      nome: "Faqueiro 24 peças",            valor: 120, categoria: "Cozinha",   quantidade: 1 },
-    { id: "airfryer",      nome: "Air fryer",                    valor: 450, categoria: "Eletro",    quantidade: 1 },
-    { id: "liquidificador",nome: "Liquidificador",               valor: 180, categoria: "Eletro",    quantidade: 1 },
-    { id: "toalhas",       nome: "Jogo de toalhas de banho",     valor: 140, categoria: "Banheiro",  quantidade: 1 },
-    { id: "tapete-banho",  nome: "Tapete de banheiro",           valor: 45,  categoria: "Banheiro",  quantidade: 2 },
-    { id: "lencol",        nome: "Jogo de lençol casal",         valor: 160, categoria: "Quarto",    quantidade: 1 },
-    { id: "travesseiros",  nome: "Par de travesseiros",          valor: 110, categoria: "Quarto",    quantidade: 1 },
-    { id: "potes",         nome: "Kit de potes herméticos",      valor: 90,  categoria: "Cozinha",   quantidade: 1 },
-    { id: "vassoura",      nome: "Kit limpeza (vassoura, rodo e balde)", valor: 80, categoria: "Lavanderia", quantidade: 1 },
-    { id: "varal",         nome: "Varal de chão",                valor: 120, categoria: "Lavanderia",quantidade: 1 },
-  ],
+    { id: "sanduicheira",   nome: "Sanduicheira",                   valor: null, categoria: "Cozinha",    quantidade: 1 },
+    { id: "ferro-tabua",    nome: "Ferro de passar roupa e tábua",  valor: null, categoria: "Lavanderia", quantidade: 1 },
+    { id: "cortina-sala",   nome: "Cortina da sala",                valor: null, categoria: "Sala",       quantidade: 1 },
+    { id: "cortina-quarto", nome: "Cortina do quarto",              valor: null, categoria: "Quarto",     quantidade: 1 },
+    { id: "exaustor",       nome: "Exaustor",                       valor: null, categoria: "Cozinha",    quantidade: 1 },
+    { id: "tanquinho",      nome: "Tanquinho",                      valor: null, categoria: "Lavanderia", quantidade: 1 },
+    { id: "rack-painel",    nome: "Rack / painel da sala",          valor: null, categoria: "Sala",       quantidade: 1 },
+    { id: "tv-50",          nome: "Televisão 50 polegadas",         valor: null, categoria: "Sala",       quantidade: 1 },
+    { id: "microondas",     nome: "Micro-ondas",                    valor: null, categoria: "Cozinha",    quantidade: 1 },
+    { id: "filtro-agua",    nome: "Filtro de água",                 valor: null, categoria: "Cozinha",    quantidade: 1 },
+    { id: "cooktop",        nome: "Cooktop",                        valor: null, categoria: "Cozinha",    quantidade: 2 },
+    { id: "forno-eletrico", nome: "Forno elétrico",                 valor: null, categoria: "Cozinha",    quantidade: 1 },  ],
 };

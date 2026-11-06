@@ -255,10 +255,10 @@
         <span class="cat"></span>
         <span class="nome"></span>
         <span class="estado ${estado[0]}">${estado[1]}</span>
-        <span class="valor">${brl(item.valor)}</span>`;
+        <span class="valor${item.valor ? "" : " sem-valor"}">${item.valor ? brl(item.valor) : "Valor a confirmar"}</span>`;
       b.querySelector(".cat").textContent = item.categoria || "";
       b.querySelector(".nome").textContent = item.nome;
-      b.setAttribute("aria-label", `${item.nome}, ${brl(item.valor)}, ${estado[1]}`);
+      b.setAttribute("aria-label", `${item.nome}, ${item.valor ? brl(item.valor) : "valor a confirmar"}, ${estado[1]}`);
       b.onclick = () => abrirItem(item);
       li.appendChild(b); ul.appendChild(li);
     });
@@ -289,7 +289,7 @@
     $("#m-passo1").hidden = false; $("#m-passo2").hidden = true;
     $("#m-categoria").textContent = item.categoria || "Presente";
     $("#m-titulo").textContent = item.nome;
-    $("#m-valor").textContent = brl(item.valor);
+    $("#m-valor").textContent = item.valor ? brl(item.valor) : "Valor a confirmar";
     $("#r-erro").hidden = true;
     $("#r-cpf").removeAttribute("aria-invalid");
     escolherForma("modelo");
@@ -320,13 +320,17 @@
           Enquanto isso, você pode enviar o valor por PIX ou levar o presente que preferir.</p>`;
       }
     } else if (forma === "pix") {
-      caixaPix(painel, itemAtual.valor);
+      if (itemAtual.valor) caixaPix(painel, itemAtual.valor);
+      else painel.innerHTML = `<p class="m-texto">O valor deste item ainda será informado. Volte em breve para enviar por PIX,
+        ou escolha outra aba para levar o presente.</p>`;
     } else {
       painel.innerHTML = `<p class="m-texto"></p>
         <p class="miudo">Leve no dia do evento, ${esc(C.dataTexto.toLowerCase())}.</p>`;
       painel.querySelector(".m-texto").textContent =
         `Você também pode levar “${itemAtual.nome}” do modelo, da cor e da marca que preferir. Vamos adorar!`;
     }
+    // sem valor definido, não dá para reservar como PIX
+    $("#r-enviar").disabled = forma === "pix" && !itemAtual.valor;
     $("#r-enviar").textContent = "Reservar este presente";
   }
 
@@ -358,7 +362,7 @@
     const botao = $("#r-enviar"); botao.disabled = true; botao.textContent = "Reservando…";
     try {
       const r = await enviar({
-        acao: "reservar", itemId: itemAtual.id, item: itemAtual.nome, valor: itemAtual.valor,
+        acao: "reservar", itemId: itemAtual.id, item: itemAtual.nome, valor: itemAtual.valor || 0,
         limite: itemAtual.quantidade || 1, nome, cpf: cpf.replace(/\D/g, ""), forma,
       });
       if (!r.ok) {
