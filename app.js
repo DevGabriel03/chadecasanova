@@ -281,12 +281,11 @@
   }
 
   // ---------------------------------------------------------------- modal de reserva
-  // Três jeitos de presentear (a aba ativa é a forma gravada na planilha):
-  //   modelo = comprar o modelo que o casal escolheu (link do item)
-  //   pix    = enviar o valor do item por PIX
-  //   livre  = levar um item de sua preferência
+  // Dois jeitos de presentear (a aba ativa é a forma gravada na planilha):
+  //   pix   = enviar o valor do item por PIX
+  //   livre = levar um item de sua preferência
   const modal = $("#modal");
-  let formaAtual = "modelo";
+  let formaAtual = "pix";
 
   function abrirItem(item) {
     itemAtual = item;
@@ -300,7 +299,7 @@
     if (item.foto) { foto.src = item.foto; foto.alt = item.nome; }
     $("#r-erro").hidden = true;
     $("#r-cpf").removeAttribute("aria-invalid");
-    escolherForma("modelo");
+    escolherForma("pix");
     modal.showModal();
     modal.scrollTop = 0;
   }
@@ -314,20 +313,7 @@
     });
     const painel = $("#m-painel");
     painel.innerHTML = "";
-    if (forma === "modelo") {
-      if (itemAtual.link) {
-        painel.innerHTML = `<p class="m-texto"></p>
-          <a class="btn btn-pri btn-p" target="_blank" rel="noopener">Ver o modelo escolhido</a>
-          <p class="miudo">Comprou? É só levar no dia do evento, ${esc(C.dataTexto.toLowerCase())}.</p>`;
-        painel.querySelector(".m-texto").textContent = itemAtual.modelo
-          ? `O modelo que escolhemos: ${itemAtual.modelo}.`
-          : "Este é o modelo que escolhemos para a nossa casa.";
-        painel.querySelector("a").href = itemAtual.link;
-      } else {
-        painel.innerHTML = `<p class="m-texto">Ainda vamos indicar o modelo de nossa preferência para este item.
-          Enquanto isso, você pode enviar o valor por PIX ou levar o presente que preferir.</p>`;
-      }
-    } else if (forma === "pix") {
+    if (forma === "pix") {
       if (itemAtual.valor) caixaPix(painel, itemAtual.valor);
       else painel.innerHTML = `<p class="m-texto">O valor deste item ainda será informado. Volte em breve para enviar por PIX,
         ou escolha outra aba para levar o presente.</p>`;
@@ -341,7 +327,6 @@
     $("#r-enviar").disabled = forma === "pix" && !itemAtual.valor;
     $("#r-enviar").textContent = "Reservar este presente";
   }
-
   // abas com setas do teclado
   $("#m-abas").addEventListener("click", (e) => {
     const b = e.target.closest("[role=tab]"); if (b) escolherForma(b.dataset.forma);
@@ -393,29 +378,36 @@
     }
   });
 
+  // Tela final da reserva: vídeo + mensagem de agradecimento do casal + o que falta fazer
   function mostrarConfirmacao(nome, forma) {
     const p2 = $("#m-passo2");
     p2.innerHTML = `
-      <p class="sobre">Reserva feita</p>
-      <h2>Obrigado, ${esc(primeiroNome(nome))}!</h2>
-      <p class="lead" style="margin-bottom:0"></p>
+      ${C.videoObrigado ? '<video class="m-video" playsinline controls preload="auto" aria-label="Vídeo de agradecimento de Gabriel e Cecília"></video>' : ""}
+      <p class="sobre">Reserva feita, ${esc(primeiroNome(nome))}</p>
+      <p class="obrigado"></p>
+      <p class="lead m-instrucao"></p>
       <div id="m-extra"></div>
       <div class="acoes"><button type="button" class="btn btn-sec" id="m-ok">Voltar para a lista</button></div>`;
-    const lead = p2.querySelector(".lead"), extra = p2.querySelector("#m-extra");
-    const dia = C.dataTexto.toLowerCase();
+    p2.querySelector(".obrigado").textContent = C.mensagemObrigado || "";
+    const lead = p2.querySelector(".m-instrucao"), extra = p2.querySelector("#m-extra");
     if (forma === "pix") {
       lead.textContent = `“${itemAtual.nome}” ficou reservado no seu nome. Agora é só enviar o PIX abaixo.`;
       caixaPix(extra, itemAtual.valor);
-    } else if (forma === "modelo" && itemAtual.link) {
-      lead.textContent = `“${itemAtual.nome}” ficou reservado no seu nome. É só levar o modelo escolhido no dia do evento, ${dia}.`;
-      extra.innerHTML = '<a class="btn btn-sec btn-p" target="_blank" rel="noopener">Ver o modelo escolhido</a>';
-      extra.querySelector("a").href = itemAtual.link;
     } else {
-      lead.textContent = `“${itemAtual.nome}” ficou reservado no seu nome. É só levar no dia do evento, ${dia}.`;
+      lead.textContent = `“${itemAtual.nome}” ficou reservado no seu nome. É só levar no dia do evento, ${C.dataTexto.toLowerCase()}.`;
     }
     $("#m-passo1").hidden = true; p2.hidden = false;
+    modal.scrollTop = 0;
     p2.querySelector("#m-ok").onclick = () => modal.close();
+
+    const video = p2.querySelector("video");
+    if (video) {
+      video.src = C.videoObrigado;
+      // o clique em "Reservar" libera o som; se o navegador não deixar, tenta mudo
+      video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
+    }
   }
+  modal.addEventListener("close", () => { const v = $("#m-passo2 video"); if (v) v.pause(); });
   // ---------------------------------------------------------------- presença
   document.querySelectorAll('input[name="vai"]').forEach((r) =>
     r.addEventListener("change", () => ($("#p-qtd-bloco").hidden = $("#form-presenca").vai.value === "nao")));

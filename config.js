@@ -45,6 +45,14 @@ window.CONFIG = {
     banco: "",
   },
 
+  // Tela final depois que a pessoa reserva um presente: vídeo + mensagem de vocês.
+  videoObrigado: "videos/obrigado.mp4",
+  mensagemObrigado:
+    "🎁 Muito obrigado por escolher um presente e por abençoar a nossa história.\n" +
+    "Cada detalhe desse novo ciclo fica mais especial com você.\n" +
+    "Já estamos contando os dias para comemorar juntos! Estaremos te esperando ✨🥂\n\n" +
+    "Gabriel e Cecília 🤵🏽👰🏻‍♀️",
+
   // Aba "Ajudar com um valor": valor mínimo aceito e valores sugeridos
   valorMinimo: 100,
   valoresSimbolicos: [100, 200, 300, 500],
@@ -57,10 +65,6 @@ window.CONFIG = {
 
   // Lista de presentes. "id" precisa ser único e não deve mudar depois que
   // alguém reservar. "quantidade" é quantas unidades você precisa.
-  // Opcionais, para a aba "Modelo que queremos" de cada item:
-  //   link:   endereço da loja do modelo de preferência de vocês
-  //   modelo: nome do modelo, por exemplo "Fogão 5 bocas Brastemp inox"
-  // Sem "link", a aba avisa que o modelo ainda será indicado.
   // "valor": média de mercado em reais (Brasília-DF, pesquisa de nov/2026), por unidade.
   // Se ficar null, o item aparece como "Valor a confirmar" e o PIX fica bloqueado.
   // "foto": imagem ilustrativa em fotos/itens/ (troque pelo arquivo que preferir).

@@ -222,7 +222,11 @@ dialog .form { border: 0; padding: 0; background: none; }
 .m-preco-txt .miudo { margin: 0; }
 /* Janela do item: três jeitos de presentear */
 .m-como { margin: 14px 0 8px; }
-.m-abas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: var(--creme-2); border-radius: 14px; padding: 4px; }
+.m-video { display: block; width: 100%; max-height: 52vh; border-radius: 14px; background: #000; margin: 0 0 16px; }
+.obrigado { white-space: pre-line; font: 400 clamp(19px, 3.6vw, 22px)/1.5 var(--fonte-titulo); color: var(--serenity-escuro); margin: 6px 0 0; }
+.m-instrucao { margin: 16px 0 0; font-size: 15px; }
+#m-passo2 .acoes { justify-content: flex-start; }
+.m-abas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; background: var(--creme-2); border-radius: 14px; padding: 4px; }
 .m-abas button { font: 400 13px/1.25 var(--fonte-texto); color: var(--tinta-2); background: none; border: 0; border-radius: 11px;
   padding: 10px 6px; cursor: pointer; text-align: center; }
 .m-abas button:hover { color: var(--serenity-escuro); }
