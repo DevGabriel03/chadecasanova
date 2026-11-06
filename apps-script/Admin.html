@@ -66,8 +66,8 @@
   <div class="resumo" id="resumo"></div>
 
   <div class="abas" role="tablist">
-    <button type="button" role="tab" data-aba="presencas" aria-selected="true">Quem vai</button>
-    <button type="button" role="tab" data-aba="reservas" aria-selected="false">Presentes escolhidos</button>
+    <button type="button" role="tab" data-aba="reservas" aria-selected="true">Presentes escolhidos</button>
+    <button type="button" role="tab" data-aba="presencas" aria-selected="false">Quem vai</button>
     <button type="button" role="tab" data-aba="contribuicoes" aria-selected="false">Contribuições</button>
   </div>
   <label for="busca" class="sobre" style="display:block">Buscar por nome</label>
@@ -80,7 +80,7 @@
   const brl = (v) => Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const dataBR = (iso) => iso ? new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
   const cpfBR = (c) => String(c || "").replace(/\D/g, "").padStart(11, "0").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-  let dados = null, abaAtual = "presencas", pendente = null;
+  let dados = null, abaAtual = "reservas", pendente = null;
 
   const telBR = (t) => { const d = String(t || "").replace(/\D/g, ""); return d.length === 11 ? `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}` : String(t || ""); };
 
@@ -108,7 +108,7 @@
     ]},
     reservas: { aba: "Reservas", nome: "Nome", cols: [
       ["Presente", (r) => r["Item"]],
-      ["Quem", (r) => r["Nome"]],
+      ["Quem escolheu", (r) => r["Nome"], (r) => `<strong>${esc(r["Nome"])}</strong>`],
       ["CPF", (r) => cpfBR(r["CPF"]), null, "num"],
       ["Como", (r) => r["Forma"], (r) => `<span class="chip">${esc(r["Forma"])}</span>`],
       ["Presença", (r) => (confirmou(r["Nome"]) ? "Confirmou" : "Não confirmou"),
@@ -136,7 +136,7 @@
     document.getElementById("planilha").href = d.planilha;
     const b = document.getElementById("atualizar"); b.disabled = false; b.textContent = "Atualizar";
     document.getElementById("rodape").textContent = "Atualizado às " + new Date(d.agora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) + ". O presente de cada pessoa é ligado à confirmação pelo nome digitado nos dois formulários.";
-    montarResumo(); montarTabela();
+    contarAbas(); montarResumo(); montarTabela();
   }
   function falhar(e) {
     const b = document.getElementById("atualizar"); b.disabled = false; b.textContent = "Atualizar";
@@ -194,7 +194,13 @@
     if (dados) montarTabela();
   }));
   document.getElementById("busca").addEventListener("input", () => dados && montarTabela());
+  function contarAbas() {
+    const nomes = { reservas: "Presentes escolhidos", presencas: "Quem vai", contribuicoes: "Contribuições" };
+    document.querySelectorAll(".abas button").forEach((b) => { b.textContent = `${nomes[b.dataset.aba]} (${dados[b.dataset.aba].length})`; });
+  }
   document.getElementById("atualizar").addEventListener("click", carregar);
+  // confere sozinho a cada 30 s, para os presentes novos aparecerem sem apertar "Atualizar"
+  setInterval(() => { if (!pendente && !document.hidden) carregar(); }, 30000);
   carregar();
 </script>
 </body>
