@@ -47,7 +47,7 @@ strong, b { font-weight: 500; }
 .topo-in { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; padding-block: 10px; }
 .marca { display: flex; align-items: center; gap: 8px; color: var(--serenity-escuro); text-decoration: none;
   font: italic 400 22px var(--fonte-titulo); }
-.marca svg { width: 24px; height: 24px; color: var(--serenity); }
+.marca .logo { width: 44px; height: 44px; border-radius: 50%; display: block; box-shadow: 0 2px 8px rgba(79, 106, 154, .25); }
 .abas { display: flex; gap: 2px; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
 .abas button {
   font: 400 13px var(--fonte-texto); letter-spacing: .06em; color: var(--tinta-2); background: none; border: 0;
