@@ -155,6 +155,7 @@ function doPost(e) {
       // "'" na frente mantém os zeros à esquerda do CPF
       aba("Reservas").appendRow([agora, texto(d.itemId, 60), texto(d.item), Number(d.valor) || 0,
         texto(d.nome), "'" + cpf, FORMAS[d.forma] || "Leva no dia"]);
+      avisarReserva(d);
       return resposta({ ok: true, reservas: lerReservas() });
     }
 
@@ -171,6 +172,7 @@ function doPost(e) {
 
     if (d.acao === "contribuicao") {
       aba("Contribuições").appendRow([agora, texto(d.nome), Number(d.valor) || 0, texto(d.recado, 500)]);
+      avisarContribuicao(d);
       return resposta({ ok: true });
     }
 
@@ -220,4 +222,46 @@ function avisarPresenca(d, tel) {
   } catch (err) {
     // sem aviso por e-mail (por exemplo, limite diário de envios): a confirmação já foi salva
   }
+}
+
+const brl = (v) => "R$ " + Number(v || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// Reservou um presente (o CPF não vai no e-mail; fica só na planilha)
+function avisarReserva(d) {
+  try {
+    const nome = umaLinha(d.nome, 80), item = umaLinha(d.item, 100);
+    const forma = FORMAS[d.forma] || "Leva no dia";
+    const valor = Number(d.valor) || 0;
+    const reservadas = lerReservas()[d.itemId] || 0, limite = Number(d.limite) || 1;
+    const assunto = "🎁 Presente reservado: " + item + " — " + nome;
+    const corpo = [
+      "Alguém acabou de escolher um presente!",
+      "",
+      "Presente: " + item,
+      "Quem escolheu: " + nome,
+      "Como: " + forma + (d.forma === "pix" && valor ? " (" + brl(valor) + ")" : ""),
+      limite > 1 ? "Unidades reservadas: " + reservadas + " de " + limite : "",
+      "",
+      "Painel do anfitrião: " + URL_PAINEL,
+    ].filter((l, i, a) => l !== "" || (a[i - 1] !== "" && i > 0)).join("\n");
+    MailApp.sendEmail({ to: DONO, subject: assunto, body: corpo, name: "Chá de Casa Nova" });
+  } catch (err) {}
+}
+
+// Avisou que enviou um valor por PIX (aba "Ajudar com um valor")
+function avisarContribuicao(d) {
+  try {
+    const nome = umaLinha(d.nome, 80), valor = Number(d.valor) || 0;
+    const assunto = "💙 PIX avisado: " + brl(valor) + " — " + nome;
+    const corpo = [
+      "Alguém avisou que enviou um PIX!",
+      "",
+      "Quem: " + nome,
+      "Valor: " + brl(valor),
+      d.recado ? "Recado: " + umaLinha(d.recado, 500) : "",
+      "",
+      "Confira o valor no app do seu banco e no Painel do anfitrião: " + URL_PAINEL,
+    ].filter((l, i, a) => l !== "" || (a[i - 1] !== "" && i > 0)).join("\n");
+    MailApp.sendEmail({ to: DONO, subject: assunto, body: corpo, name: "Chá de Casa Nova" });
+  } catch (err) {}
 }
