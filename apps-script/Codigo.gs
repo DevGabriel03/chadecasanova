@@ -7,6 +7,17 @@
  * ou use o Painel do anfitrião (arquivo Admin.html, só abre para a conta DONO).
  */
 
+// PASSO ÚNICO DE CONFIGURAÇÃO: esta função fica no topo para já vir selecionada no editor.
+// Clique em "Executar" e permita o envio de e-mail; um aviso de teste chega no seu celular.
+function testarAviso() {
+  MailApp.sendEmail({
+    to: DONO,
+    subject: "✅ Teste: avisos do Chá de Casa Nova funcionando",
+    body: "Se você recebeu esta mensagem, os avisos de confirmação de presença vão chegar aqui.\n\nPainel do anfitrião: " + URL_PAINEL,
+    name: "Chá de Casa Nova",
+  });
+}
+
 // Como a pessoa vai presentear (aba escolhida no site)
 const FORMAS = {
   modelo: "Leva o modelo indicado",
@@ -154,6 +165,7 @@ function doPost(e) {
       aba("Presenças").appendRow([agora, texto(d.nome), d.vai === "sim" ? "Sim" : "Não",
         Number(d.pessoas) || 0, texto((d.acompanhantes || []).join(", "), 500),
         tel ? "'" + tel : "", texto(d.recado, 500)]);
+      avisarPresenca(d, tel);
       return resposta({ ok: true });
     }
 
@@ -167,5 +179,45 @@ function doPost(e) {
     return resposta({ ok: false, erro: "servidor" });
   } finally {
     trava.releaseLock();
+  }
+}
+
+// ------------------------------------------------------------------ aviso no celular
+// A cada confirmação de presença, manda um e-mail para o dono. No celular, ele chega como
+// notificação do app do Gmail. Se o envio falhar, a confirmação do convidado não é afetada.
+const URL_PAINEL = "https://script.google.com/macros/s/AKfycbxMckoZeiGvltZEJPNuSjAxQFkp73QAGKXYuNk1k4__SeqdRljJOeaZEeCMr0JyA0fhnA/exec";
+
+// texto de convidado em uma linha só, para não bagunçar o assunto do e-mail
+function umaLinha(v, max) {
+  return String(v == null ? "" : v).replace(/[\r\n\t]+/g, " ").trim().slice(0, max || 200);
+}
+
+function avisarPresenca(d, tel) {
+  try {
+    const vem = d.vai === "sim";
+    const nome = umaLinha(d.nome, 80);
+    const pessoas = Number(d.pessoas) || 0;
+    // total de confirmados até agora (soma a coluna "Pessoas" das linhas com "Sim")
+    const linhas = aba("Presenças").getDataRange().getValues().slice(1);
+    const total = linhas.filter((l) => l[2] === "Sim").reduce((s, l) => s + (Number(l[3]) || 1), 0);
+    const assunto = vem
+      ? "✅ Presença confirmada: " + nome + " (" + pessoas + (pessoas === 1 ? " pessoa)" : " pessoas)")
+      : "❌ Não vai poder ir: " + nome;
+    const corpo = [
+      vem ? "Chegou uma nova confirmação de presença!" : "Um convidado avisou que não vai poder ir.",
+      "",
+      "Nome: " + nome,
+      vem ? "Pessoas: " + pessoas : "",
+      vem && d.acompanhantes && d.acompanhantes.length ? "Acompanhantes: " + umaLinha(d.acompanhantes.join(", "), 300) : "",
+      tel ? "WhatsApp: " + tel : "",
+      d.recado ? "Recado: " + umaLinha(d.recado, 500) : "",
+      "",
+      "Total confirmado até agora: " + total + (total === 1 ? " pessoa" : " pessoas"),
+      "",
+      "Painel do anfitrião: " + URL_PAINEL,
+    ].filter((l, i, a) => l !== "" || (a[i - 1] !== "" && i > 0)).join("\n");
+    MailApp.sendEmail({ to: DONO, subject: assunto, body: corpo, name: "Chá de Casa Nova" });
+  } catch (err) {
+    // sem aviso por e-mail (por exemplo, limite diário de envios): a confirmação já foi salva
   }
 }
