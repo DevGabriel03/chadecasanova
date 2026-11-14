@@ -137,5 +137,8 @@ window.CONFIG = {
     { id: "escada", nome: "Escada dobrável de 3 ou 4 degraus", valor: 160, foto: "fotos/itens/escada.jpg", categoria: "Casa", quantidade: 1 },
     { id: "caixa-ferramentas", nome: "Caixa de ferramentas básica para casa", valor: 150, foto: "fotos/itens/caixa-ferramentas.jpg", categoria: "Casa", quantidade: 1 },
     { id: "capachos", nome: "Tapetes de entrada / capachos decorativos", valor: 50, foto: "fotos/itens/capachos.jpg", categoria: "Casa", quantidade: 2 },
+    { id: "mixer", nome: "Mixer", valor: 230, foto: "fotos/itens/mixer.jpg", categoria: "Cozinha", quantidade: 1 },
+    { id: "geladeira", nome: "Geladeira", valor: 3320, foto: "fotos/itens/geladeira.jpg", categoria: "Cozinha", quantidade: 1 },
+    { id: "guarda-roupa", nome: "Guarda-roupa", valor: 2290, foto: "fotos/itens/guarda-roupa.jpg", categoria: "Quarto", quantidade: 1 },
   ],
 };
